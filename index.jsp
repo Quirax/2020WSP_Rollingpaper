@@ -7,7 +7,7 @@
     String[] preload_js = { "js/index.js" };
 %>
 <%@ include file="template/header.jsp" %>
-<div id="main" class="view center">
+<div class="view center slideFx">
     <h1>롤링 페이퍼</h1>
     <div id="description">
         먼 곳으로 떠나는 동료에게<br />
@@ -16,7 +16,7 @@
     </div>
     <div class="justify" id="buttons">
         <div>
-            <a href="" id="login">롤링 페이퍼<br />만들러 가기</a><br/>
+            <a href="login.jsp" id="login">롤링 페이퍼<br />만들러 가기</a><br/>
             <span>로그인 및 회원가입 필요</span>
         </div>
         <div>
