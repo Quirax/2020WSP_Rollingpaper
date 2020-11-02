@@ -6,9 +6,14 @@ html, body {
 }
 
 .view {
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
-    display: inline-block;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.view h1 {
+    margin: 0;
 }
 
 .view.center {
@@ -20,7 +25,6 @@ html, body {
 
 .view.center h1 {
     font-size: 4em;
-    margin: 0;
 }
 
 .view.center h2 {

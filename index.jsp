@@ -7,7 +7,7 @@
     String[] preload_js = { "js/index.js" };
 %>
 <%@ include file="template/header.jsp" %>
-<div class="view center slideFx">
+<div class="view center slideFx" id="main">
     <h1>롤링 페이퍼</h1>
     <div id="description">
         먼 곳으로 떠나는 동료에게<br />

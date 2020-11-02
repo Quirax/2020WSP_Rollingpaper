@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" %>
 <%
     String[] custom_css = {
-        //"https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap",
         "css/login.css"
     };
     String[] preload_js = { "js/login.js" };
@@ -26,8 +25,8 @@
             <tr>
                 <td colspan="2">
                     <div id="buttons">
-                        <a href="">가입하기</a>
-                        <a href="">로그인</a>
+                        <a href="javascript:;">가입하기</a>
+                        <a href="javascript:;">로그인</a>
                     </div>
                 </td>
             </tr>
