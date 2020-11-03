@@ -50,3 +50,12 @@ input[type="password"] {
     margin-top: -50px;
     opacity: 0;
 }
+
+a.button {
+    border: 3px solid black;
+    display: inline-block;
+    padding: 0.5em;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+}

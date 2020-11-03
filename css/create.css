@@ -1,0 +1,36 @@
+h1 {
+    font-size: 2em !important;
+    margin: 1em 0 !important;
+}
+h2 {
+    font-size: 1.5em !important;
+}
+
+form {
+    width: 100%;
+}
+
+input {
+    text-align: center;
+    font-size: inherit;
+    font-weight: inherit;
+    width: 100%;
+    padding: 2px 0;
+}
+input[name="recv"] {
+    max-width: 5em;
+}
+input[name="title"] {
+    max-width: 10em;
+}
+input[name="pwd"] {
+    max-width: 5em;
+}
+
+.view {
+    text-align: center;
+}
+
+a.button {
+    margin-top: 3em;
+}

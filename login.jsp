@@ -12,21 +12,21 @@
         <table>
             <tr>
                 <th>아이디</th>
-                <td><input type="text" name="id" /></td>
+                <td><input type="text" maxlength="250" name="id" /></td>
             </tr>
             <tr>
                 <th>비밀번호</th>
-                <td><input type="password" name="pwd" /></td>
+                <td><input type="password" maxlength="250" name="pwd" /></td>
             </tr>
             <tr>
                 <th>닉네임</th>
-                <td><input type="text" name="nick" /></td>
+                <td><input type="text" maxlength="30" name="nick" /></td>
             </tr>
             <tr>
                 <td colspan="2">
                     <div id="buttons">
-                        <a href="javascript:;">가입하기</a>
-                        <a href="javascript:;">로그인</a>
+                        <a class="button" href="javascript:;">가입하기</a>
+                        <a class="button" href="javascript:;">로그인</a>
                     </div>
                 </td>
             </tr>
