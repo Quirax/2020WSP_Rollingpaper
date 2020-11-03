@@ -59,3 +59,8 @@ a.button {
     text-decoration: none;
     color: inherit;
 }
+
+.required {
+    background-color: rgba(255, 0, 0, 0.5) !important;
+    border-bottom: 3px solid red !important;
+}

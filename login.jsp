@@ -12,15 +12,15 @@
         <table>
             <tr>
                 <th>아이디</th>
-                <td><input type="text" maxlength="250" name="id" /></td>
+                <td><input type="text" maxlength="250" name="id" required /></td>
             </tr>
             <tr>
                 <th>비밀번호</th>
-                <td><input type="password" maxlength="250" name="pwd" /></td>
+                <td><input type="password" maxlength="250" name="pwd" required /></td>
             </tr>
             <tr>
                 <th>닉네임</th>
-                <td><input type="text" maxlength="30" name="nick" /></td>
+                <td><input type="text" maxlength="30" name="nick" required /></td>
             </tr>
             <tr>
                 <td colspan="2">
