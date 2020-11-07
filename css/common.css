@@ -58,6 +58,7 @@ a.button {
     text-align: center;
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
 }
 
 .required {

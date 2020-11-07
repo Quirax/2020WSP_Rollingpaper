@@ -1,17 +1,22 @@
 function onLoad(fn) {
     $(document).ready(fn);
 }
+
+function checkForm(form) {
+    var toSubmit = true;
+    $(form).find("*[required]").each(function() {
+        if ($(this).val() == "") {
+            $(this).addClass("required");
+            toSubmit = false;
+        }
+        else $(this).removeClass("required");
+    });
+    return toSubmit;
+}
+
 onLoad(function() {
     $("form").submit(function(e) {
-        var toSubmit = true;
-        $(this).find("*[required]").each(function() {
-            if ($(this).val() == "") {
-                $(this).addClass("required");
-                toSubmit = false;
-            }
-            else $(this).removeClass("required");
-        });
-        if(!toSubmit) {
+        if(!checkForm(this)) {
             e.preventDefault();
             return false;
         }
