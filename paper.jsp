@@ -29,7 +29,6 @@ for (int i = 0; i < 25; i++) {
     <div class="form_wrapper" id="content_form">
         <form action="" method="post">
             <div><textarea name="content" required></textarea></div>
-            <div class="info">by <input name="by" type="text" required autocomplete="new-password" /></div>
             <div class="info">비밀번호: <input name="pwd" type="password" required autocomplete="new-password" /></div>
             <div class="info">
                 <a class="button submit_form">추가</a>
@@ -40,7 +39,6 @@ for (int i = 0; i < 25; i++) {
     <div class="form_wrapper" id="content_view">
         <form action="" method="post">
             <div id="content">내용</div>
-            <div class="info">by 쓴 사람</div>
             <div class="info">
                 <a id="delete_content" class="button">삭제</a>
                 <a class="button close_form">닫기</a>
