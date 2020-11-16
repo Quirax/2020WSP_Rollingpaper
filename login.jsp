@@ -8,11 +8,11 @@
 <%@ include file="template/header.jsp" %>
 <div class="view center slideFx">
     <h2>로그인</h2>
-    <form id="login_form" action="" method="post">
+    <form id="login_form" action="login.do" method="post">
         <table>
             <tr>
                 <th>아이디</th>
-                <td><input type="text" maxlength="250" name="id" required /></td>
+                <td><input type="text" maxlength="250" name="name" required /></td>
             </tr>
             <tr>
                 <th>비밀번호</th>

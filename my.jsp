@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" %>
+<%@ page import="java.util.*" %>
+<%@ page import="com.quiraxical.rollingpaper.*" %>
 <%
 String[] custom_css = { "css/my.css" };
 String[] preload_js = { "js/my.js" };
@@ -20,24 +22,35 @@ String[] preload_js = { "js/my.js" };
             </tr>
         </thead>
         <tbody>
+            <%
+ArrayList<Rollingpaper> paper = (ArrayList<Rollingpaper>) request.getAttribute("rp");
+for(Rollingpaper rp : paper) {
+            %>
             <tr>
-                <td>5</td>
-                <td>마뫄님</td>
-                <td>마뫄님의 25번째 생일을 축하합니다</td>
-                <td><a class="button open" href="">보러가기</a>
-                <td><a class="button close" href="">마감하기</a>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>김철수</td>
-                <td>철수야, 생일 축하해! <span class="closed">(닫힘)</span></td>
+                <td><%= rp.getId() %></td>
+                <td><%= rp.getTo() %></td>
+                <td><%= rp.getTitle() %>
+            <%
+    if (rp.getIsClosed()) {
+            %>
+                <span class="closed">(닫힘)</span>
+                </td>
                 <td><a class="button print" href="">인쇄하기</a>
                 <td><a class="button delete" href="">삭제하기</a>
-            </tr>
+            <%
+    } else {
+            %>
+                </td>
+                <td><a class="button open" href="">보러가기</a>
+                <td><a class="button close" href="">마감하기</a>
+            <%
+    }
+}
+            %>
             <tr>
                 <td>4</td>
                 <td>김철수</td>
-                <td>철수야, 생일 축하해! <span class="closed">(닫힘)</span></td>
+                <td>철수야, 생일 축하해! </td>
                 <td><a class="button print" href="">인쇄하기</a>
                 <td><a class="button delete" href="">삭제하기</a>
             </tr>

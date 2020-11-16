@@ -18,6 +18,9 @@ public class FrontController extends HttpServlet {
          * TODO: 액션과 컨트롤러 바인딩
          * usage: map.put("/action.do", new Controller());
          ***/
+        map.put("/mypage.do", new MypageController());
+        map.put("/createRP.do", new CreateRPController());
+        map.put("/login.do", new LoginController());
     }
 
     @Override

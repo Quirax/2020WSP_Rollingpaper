@@ -5,6 +5,7 @@ public class Rollingpaper {
     private User user;
     private String to;
     private String title;
+    private boolean isClosed = false;
     
     public void setId(int val) {
         this.id = val;
@@ -32,5 +33,12 @@ public class Rollingpaper {
     }
     public String getTitle() {
         return this.title;
+    }
+
+    public void setIsClosed(boolean val) {
+        this.isClosed = val;
+    }
+    public boolean getIsClosed() {
+        return this.isClosed;
     }
 }

@@ -17,7 +17,7 @@ input {
     width: 100%;
     padding: 2px 0;
 }
-input[name="recv"] {
+input[name="to"] {
     max-width: 5em;
 }
 input[name="title"] {
