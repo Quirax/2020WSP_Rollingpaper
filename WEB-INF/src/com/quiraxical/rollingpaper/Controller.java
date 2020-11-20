@@ -25,7 +25,7 @@ public class Controller {
         
         PrintWriter out = response.getWriter();
         out.println("<script type=\"text/javascript\">");
-        out.println("alert(\"" + msg + "\");");
+        out.println("alert(\"" + msg.replaceAll("\n", "\\\\n") + "\");");
         out.println("window.location.href = \"" + target + "\";");
         out.println("</script>");
     }

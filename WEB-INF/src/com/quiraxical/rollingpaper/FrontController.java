@@ -21,10 +21,14 @@ public class FrontController extends HttpServlet {
         map.put("/mypage.do", new MypageController());
         map.put("/createRP.do", new CreateRPController());
         map.put("/login.do", new LoginController());
+        map.put("/rollingpaper.do", new RollingpaperController());
+        map.put("/writeContent.do", new WriteContentController());
+        map.put("/deleteContent.do", new DeleteContentController());
     }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String url = request.getRequestURI();
         String ctx = request.getContextPath();
         String path = url.substring(ctx.length());  //요청 액션을 구함

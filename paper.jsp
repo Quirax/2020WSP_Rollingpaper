@@ -1,21 +1,27 @@
 <%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" %>
+<%@ page import="java.util.*" %>
+<%@ page import="com.quiraxical.rollingpaper.*" %>
 <%
 String[] custom_css = { "css/paper.css" };
 String[] preload_js = { "js/paper.js" };
 %>
 <%@ include file="template/header.jsp" %>
+<%
+Rollingpaper paper = (Rollingpaper) session.getAttribute("rp");
+%>
 <div class="view">
     <h1>
-        <span>To. 마뫄님</span><br/>
-        마뫄님의 25번째 생일을 축하합니다.
+        <span>To. <%= paper.getTo() %>님</span><br/>
+        <%= paper.getTitle() %>
     </h1>
     <ul>
 <%
-for (int i = 0; i < 25; i++) {
+ArrayList<RollingpaperContent> content = paper.getContent();
+for (RollingpaperContent cnt : content) {
 %>
-        <li>
-            <div>마뫄님, 생일축하해요!</div>
-            <div>- 매니저</div>
+        <li data-id="<%= cnt.getId() %>">
+            <div><%= cnt.getText().replaceAll("\\\n", "<br />") %></div>
+            <div>- <%= cnt.getFrom() %></div>
         </li>
 <%
 }
@@ -27,8 +33,8 @@ for (int i = 0; i < 25; i++) {
         <a class="button" id="closePaper">롤링 페이퍼 닫기</a>
     </div>
     <div class="form_wrapper" id="content_form">
-        <form action="" method="post">
-            <div><textarea name="content" required></textarea></div>
+        <form action="writeContent.do" method="post">
+            <div><textarea name="text" required></textarea></div>
             <div class="info">From: <input name="from" type="text" required autocomplete="new-password" /></div>
             <div class="info">비밀번호: <input name="pwd" type="password" required autocomplete="new-password" /></div>
             <div class="info">
@@ -38,7 +44,7 @@ for (int i = 0; i < 25; i++) {
         </form>
     </div>
     <div class="form_wrapper" id="content_view">
-        <form action="" method="post">
+        <form>
             <div id="content">내용</div>
             <div id="from">누구로부터</div>
             <div class="info">
@@ -49,6 +55,7 @@ for (int i = 0; i < 25; i++) {
     </div>
     <div class="form_wrapper" id="pwd_form">
         <form action="" method="post">
+            <input name="id" type="hidden" />
             <div class="info">비밀번호 입력: <input name="pwd" type="password" required autocomplete="new-password" /></div>
             <div class="info">
                 <a class="button submit_form">입력</a>

@@ -23,8 +23,10 @@ public class CreateRPController extends Controller {
         rp.setTitle(request.getParameter("title"));
         rp.setTo(request.getParameter("to"));
 
+        //TODO: use RSA Cryption
+
         DAO dao = DAO.getInstance();
-        dao.createRollingpaper(user, rp);
+        dao.createRollingpaper(user, rp, request.getParameter("pwd"));
 
         response.sendRedirect("mypage.do");
     }

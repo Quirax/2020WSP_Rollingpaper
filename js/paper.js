@@ -12,12 +12,14 @@ onLoad(function() {
         var form = $(this).parents("form")[0];
         if(!checkForm(form)) return;
         $(".form_wrapper").css("display", "none");
-        alert("적용되었습니다");
+        form.submit();
     });
 
     $("#delete_content").click(function() {
         $("#pwd_form").css("display", "flex");
         $("#pwd_form form *").val("");
+        $("#pwd_form input[name=\"id\"]").val($("#content_view").data("id"));
+        $("#pwd_form form").attr("action", "deleteContent.do");
     });
 
     $("#pwdChange").click(function() {
@@ -27,10 +29,12 @@ onLoad(function() {
 
     $("#closePaper").click(function() {
         if(!confirm("한 번 닫은 롤링 페이퍼는 다시 열 수 없으며, 다른 사람들이 글을 남길 수 없습니다.\n그래도 계속하시겠습니까?")) return;
-        alert("닫혔습니다!");
     });
     
     $("ul li:not(#add)").click(function() {
-        $("#content_view").css("display", "flex");
+        console.log($(this).data("id"));
+        $("#content_view").data("id", $(this).data("id").toString()).css("display", "flex");
+        $("#content").html($(this).children("div:first").html());
+        $("#from").html($(this).children("div:last").html());
     })
 });

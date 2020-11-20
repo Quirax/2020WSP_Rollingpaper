@@ -57,6 +57,11 @@ li:nth-child(7n+0) {
     border-color: #ff33ff;
     background-color: #ff80ff;
 }
+li > div {
+    overflow: hidden;
+    word-break: break-all;
+    max-height: calc(100px - 1.5em);
+}
 
 #add {
     border: 3px dotted black;
@@ -91,6 +96,7 @@ li:nth-child(7n+0) {
     width: 70vw;
     height: 50vh;
     background-color: white;
+    max-width: 720px;
 }
 
 .form_wrapper form .info {

@@ -1,11 +1,14 @@
 package com.quiraxical.rollingpaper;
 
+import java.util.ArrayList;
+
 public class Rollingpaper {
     private int id;
     private User user;
     private String to;
     private String title;
     private boolean isClosed = false;
+    private ArrayList<RollingpaperContent> content = null;
     
     public void setId(int val) {
         this.id = val;
@@ -40,5 +43,12 @@ public class Rollingpaper {
     }
     public boolean getIsClosed() {
         return this.isClosed;
+    }
+
+    public void setContent(ArrayList<RollingpaperContent> val) {
+        this.content = val;
+    }
+    public ArrayList<RollingpaperContent> getContent() {
+        return this.content;
     }
 }
