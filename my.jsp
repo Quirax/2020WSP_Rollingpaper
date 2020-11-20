@@ -36,7 +36,7 @@ for(Rollingpaper rp : paper) {
                 <span class="closed">(닫힘)</span>
                 </td>
                 <td><a class="button print" href="">인쇄하기</a>
-                <td><a class="button delete" href="">삭제하기</a>
+                <td><a class="button delete" href="deleteRP.do?id=<%= rp.getId() %>">삭제하기</a>
             <%
     } else {
             %>

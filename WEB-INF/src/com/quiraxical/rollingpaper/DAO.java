@@ -104,6 +104,19 @@ public class DAO {
         return null;
     }
 
+    public boolean deleteRollingpaper(User user, int id) {
+        if (id == 0) return false;
+        //TODO: sql로 직접
+        for(int i = 0; i < paper.size(); i++) {
+            if(paper.get(i).getId() == id) {
+                if(user == null || !user.getName().equals(paper.get(i).getUser().getName())) return false;
+                paper.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void createRollingpaperContent(Rollingpaper rp, RollingpaperContent rpc, String pwd) {
         //TODO: sql로 직접
         ArrayList<RollingpaperContent> content = rp.getContent();
