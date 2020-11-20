@@ -30,7 +30,7 @@ for (RollingpaperContent cnt : content) {
     </ul>
     <div id="admin_menu">
         <a class="button" id="pwdChange">비밀번호 변경</a>
-        <a class="button" id="closePaper">롤링 페이퍼 닫기</a>
+        <a class="button" id="closePaper">마감하기</a>
     </div>
     <div class="form_wrapper" id="content_form">
         <form action="writeContent.do" method="post">

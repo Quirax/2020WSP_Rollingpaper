@@ -14,7 +14,7 @@ public class MypageController extends Controller {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if(user == null) {
+        if(user == null || user.getName().equals("")) {
             this.error(response, "login.jsp", "잘못된 접근입니다");
             return;
         }

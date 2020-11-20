@@ -13,10 +13,10 @@ public class WriteContentController extends Controller {
         HttpSession session = request.getSession();
         //TODO: use user
         User user = (User) session.getAttribute("user");
-        // if(user == null) {
-        //     this.error(response, "login.jsp", "잘못된 접근입니다");
-        //     return;
-        // }
+        if(user == null) {
+            this.error(response, "login.jsp", "잘못된 접근입니다");
+            return;
+        }
 
         RollingpaperContent content = new RollingpaperContent();
         content.setFrom(request.getParameter("from"));

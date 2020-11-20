@@ -41,8 +41,8 @@ for(Rollingpaper rp : paper) {
     } else {
             %>
                 </td>
-                <td><a class="button open" href="">보러가기</a>
-                <td><a class="button close" href="">마감하기</a>
+                <td><a class="button open" href="rollingpaper.do?id=<%= rp.getId() %>">보러가기</a>
+                <td><a class="button close" href="closeRP.do?id=<%= rp.getId() %>">마감하기</a>
             <%
     }
 }

@@ -12,11 +12,6 @@ public class DeleteContentController extends Controller {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        // TODO: use user
-        // if(user == null) {
-        //     this.error(response, "login.jsp", "잘못된 접근입니다");
-        //     return;
-        // }
 
         int id;
 

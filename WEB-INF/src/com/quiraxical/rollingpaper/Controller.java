@@ -26,7 +26,8 @@ public class Controller {
         PrintWriter out = response.getWriter();
         out.println("<script type=\"text/javascript\">");
         out.println("alert(\"" + msg.replaceAll("\n", "\\\\n") + "\");");
-        out.println("window.location.href = \"" + target + "\";");
+        if (target.equals("")) out.println("history.back();");
+        else out.println("window.location.href = \"" + target + "\";");
         out.println("</script>");
     }
 }

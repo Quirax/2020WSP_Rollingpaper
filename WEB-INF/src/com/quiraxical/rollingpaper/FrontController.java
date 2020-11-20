@@ -24,6 +24,7 @@ public class FrontController extends HttpServlet {
         map.put("/rollingpaper.do", new RollingpaperController());
         map.put("/writeContent.do", new WriteContentController());
         map.put("/deleteContent.do", new DeleteContentController());
+        map.put("/closeRP.do", new CloseRPController());
     }
 
     @Override

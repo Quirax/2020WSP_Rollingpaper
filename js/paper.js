@@ -28,7 +28,8 @@ onLoad(function() {
     });
 
     $("#closePaper").click(function() {
-        if(!confirm("한 번 닫은 롤링 페이퍼는 다시 열 수 없으며, 다른 사람들이 글을 남길 수 없습니다.\n그래도 계속하시겠습니까?")) return;
+        if(!confirm("한 번 마감한 롤링 페이퍼는 다시 열 수 없으며, 다른 사람들이 글을 남길 수 없습니다.\n그래도 계속하시겠습니까?")) return;
+        location.href = "closeRP.do";
     });
     
     $("ul li:not(#add)").click(function() {

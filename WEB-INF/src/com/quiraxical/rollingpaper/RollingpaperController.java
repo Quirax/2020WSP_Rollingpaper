@@ -12,11 +12,6 @@ public class RollingpaperController extends Controller {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        // //TODO: use user
-        // if(user == null) {
-        //     this.error(response, "login.jsp", "잘못된 접근입니다");
-        //     return;
-        // }
 
         //TODO: use RSA Crypto
 
@@ -38,10 +33,21 @@ public class RollingpaperController extends Controller {
         }
 
         if(paper == null) {
-            this.error(response, "index.jsp", "해당하는 롤링 페이퍼를 찾을 수 없습니다.\n"
-                + "입력한 비밀번호가 잘못되었거나, 이미 닫힌 롤링 페이퍼일 수 있습니다.\n"
+            this.error(response, "", "해당하는 롤링 페이퍼를 찾을 수 없습니다.\n"
+                + "입력한 비밀번호가 잘못되었거나, 이미 마감된 롤링 페이퍼일 수 있습니다.\n"
                 + "생성자에게 문의하시기 바랍니다.");
             return;
+        }
+
+        if(paper.getIsClosed()) {
+            this.error(response, "", "이미 마감된 롤링 페이퍼입니다. 관리자에게 문의하세요.");
+            return;
+        }
+
+        if(user == null) {
+            user = new User();
+            user.setName("");
+            session.setAttribute("user", user);
         }
 
         session.setAttribute("rp", paper);
