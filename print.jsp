@@ -1,21 +1,27 @@
 <%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" %>
+<%@ page import="java.util.*" %>
+<%@ page import="com.quiraxical.rollingpaper.*" %>
 <%
 String[] custom_css = { "css/print.css" };
 String[] preload_js = { "js/print.js" };
 %>
 <%@ include file="template/header.jsp" %>
-<div>
+<%
+Rollingpaper paper = (Rollingpaper) session.getAttribute("rp");
+%>
+<div class="view">
     <h1>
-        <span>To. 마뫄님</span><br/>
-        마뫄님의 25번째 생일을 축하합니다.
+        <span>To. <%= paper.getTo() %>님</span><br/>
+        <%= paper.getTitle() %>
     </h1>
     <ul>
 <%
-for (int i = 0; i < 25; i++) {
+ArrayList<RollingpaperContent> content = paper.getContent();
+for (RollingpaperContent cnt : content) {
 %>
-        <li>
-            <div>마뫄님, 생일축하해요!</div>
-            <div>- 매니저</div>
+        <li data-id="<%= cnt.getId() %>">
+            <div><%= cnt.getText().replaceAll("\\\n", "<br />") %></div>
+            <div>- <%= cnt.getFrom() %></div>
         </li>
 <%
 }

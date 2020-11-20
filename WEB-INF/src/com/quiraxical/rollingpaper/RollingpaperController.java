@@ -8,10 +8,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class RollingpaperController extends Controller {
+    private boolean toPrint = false;
+
+    public RollingpaperController(boolean toPrint) {
+        this.toPrint = toPrint;
+    }
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
+        if(toPrint && (user == null || user.getName().equals(""))) {
+            this.error(response, "login.jsp", "잘못된 접근입니다");
+            return;
+        }
 
         //TODO: use RSA Crypto
 
@@ -39,7 +49,7 @@ public class RollingpaperController extends Controller {
             return;
         }
 
-        if(paper.getIsClosed()) {
+        if(!toPrint && paper.getIsClosed()) {
             this.error(response, "", "이미 마감된 롤링 페이퍼입니다. 관리자에게 문의하세요.");
             return;
         }
@@ -52,6 +62,11 @@ public class RollingpaperController extends Controller {
 
         session.setAttribute("rp", paper);
 
-        this.forward(request, response, "paper.jsp");
+        if(toPrint && !paper.getIsClosed()) {
+            response.sendRedirect("rollingpaper.do");
+            return;
+        }
+
+        this.forward(request, response, (toPrint)?"print.jsp":"paper.jsp");
     }
 }

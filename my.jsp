@@ -35,7 +35,7 @@ for(Rollingpaper rp : paper) {
             %>
                 <span class="closed">(닫힘)</span>
                 </td>
-                <td><a class="button print" href="">인쇄하기</a>
+                <td><a class="button print" href="printRP.do?id=<%= rp.getId() %>">인쇄하기</a>
                 <td><a class="button delete" href="deleteRP.do?id=<%= rp.getId() %>">삭제하기</a>
             <%
     } else {
@@ -47,13 +47,6 @@ for(Rollingpaper rp : paper) {
     }
 }
             %>
-            <tr>
-                <td>4</td>
-                <td>김철수</td>
-                <td>철수야, 생일 축하해! </td>
-                <td><a class="button print" href="">인쇄하기</a>
-                <td><a class="button delete" href="">삭제하기</a>
-            </tr>
         </tbody>
     </table>
     <a id="modify" href="">회원정보 수정</a>
