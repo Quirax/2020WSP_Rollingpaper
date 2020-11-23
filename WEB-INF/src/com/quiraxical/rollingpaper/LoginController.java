@@ -8,8 +8,6 @@ import javax.servlet.http.*;
 public class LoginController extends Controller {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-
         DAO dao = DAO.getInstance();
         // TODO: password는 복호화 거쳐서
         User user = dao.findUser(request.getParameter("name"), request.getParameter("pwd"));

@@ -37,6 +37,10 @@ public class RollingpaperController extends Controller {
         }
         
         if(paper == null || (id > 0 && paper.getId() != id)) {
+            if((user == null || user.getName().equals("")) && request.getParameter("pwd") == null) {
+                new LoginPageController(3).execute(request, response);
+                return;
+            }
             paper = dao.getRollingpaper(user, id, request.getParameter("pwd"));
         } else {
             paper = dao.refreshRollingpaper(user, paper);

@@ -9,7 +9,7 @@ public class DAO {
      * mockup part
      * TODO: 데이터베이스 연결 시 이 파트는 삭제할 것
      ***/
-    public User user = null;
+    public ArrayList<User> user = null;
     private ArrayList<Rollingpaper> paper = null;
     private ArrayList<RollingpaperContent> content = null;
     
@@ -18,9 +18,11 @@ public class DAO {
          * mockup part
          * TODO: 데이터베이스 연결 시 이 파트는 삭제할 것
          ***/
-        user = new User();
-        user.setName("quiraxical");
-        user.setNick("킈락");
+        user = new ArrayList<User>();
+        User usr = new User();
+        usr.setName("quirax");
+        usr.setNick("킈락");
+        user.add(usr);
 
         paper = new ArrayList<Rollingpaper>();
         for (int i = 1; i <= 5; i++) {
@@ -28,7 +30,7 @@ public class DAO {
             rp.setId(i);
             rp.setTitle("롤링페이퍼 #" + i);
             rp.setTo("대상자 #" + i * i);
-            rp.setUser(user);
+            rp.setUser(usr);
             rp.setIsClosed(i % 2 == 0);
             paper.add(rp);
         }
@@ -49,12 +51,32 @@ public class DAO {
 
     public User findUser(String name, String pwd) {
         //TODO: sql로 직접
-        return user;
+        for(User u : user) {
+            if(u.getName().equals(name)) {
+                if(pwd == null || !pwd.equals("1234")) return null;
+                return u;
+            }
+        }
+        return null;
+    }
+
+    public User createUser(String name, String pwd, String nick) {
+        User usr = new User();
+        for(User u : user)
+            if(u.getName().equals(name)) return null;
+        usr.setName(name);
+        usr.setNick(nick);
+        user.add(usr);
+        return usr;
     }
 
     public ArrayList<Rollingpaper> getRollingpaperLists(User user) {
         //TODO: sql로 직접
-        return paper;
+        ArrayList<Rollingpaper> list = new ArrayList<Rollingpaper>();
+        for(Rollingpaper r : paper) {
+            if(r.getUser().getName().equals(user.getName())) list.add(r);
+        }
+        return list;
     }
 
     public void createRollingpaper(User user, Rollingpaper rp, String pwd) {
@@ -81,7 +103,14 @@ public class DAO {
 
     public Rollingpaper refreshRollingpaper(User user, Rollingpaper rp) {
         //TODO: sql로 직접
+        //if(user != null && !user.getName().equals("") && !user.getName().equals(rp.getUser().getName())) return null;
         //rp.setContent(content);
+        return rp;
+    }
+
+    public Rollingpaper changeRollingpaperPassword(User user, Rollingpaper rp, String pwd) {
+        //TODO: sql로 직접
+        if(user == null || !user.getName().equals(rp.getUser().getName())) return null;
         return rp;
     }
 

@@ -27,6 +27,10 @@ public class FrontController extends HttpServlet {
         map.put("/closeRP.do", new CloseRPController());
         map.put("/deleteRP.do", new DeleteRPController());
         map.put("/printRP.do", new RollingpaperController(true));
+        map.put("/changePassword.do", new ChangePasswordController());
+        map.put("/join.do", new JoinController());
+        map.put("/joinPage.do", new LoginPageController(1));
+        map.put("/modifyPage.do", new LoginPageController(2));
     }
 
     @Override

@@ -25,6 +25,7 @@ onLoad(function() {
     $("#pwdChange").click(function() {
         $("#pwd_form").css("display", "flex");
         $("#pwd_form form *").val("");
+        $("#pwd_form form").attr("action", "changePassword.do");
     });
 
     $("#closePaper").click(function() {
