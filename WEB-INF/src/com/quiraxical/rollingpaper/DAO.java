@@ -43,6 +43,8 @@ public class DAO {
             rpc.setFrom("보낸사람 #" + i);
             content.add(rpc);
         }
+        
+        printAllUsers(); //TODO: temporary function
     }
 
     public static DAO getInstance() {
@@ -67,7 +69,39 @@ public class DAO {
         usr.setName(name);
         usr.setNick(nick);
         user.add(usr);
+        printAllUsers(); //TODO: temporary function
         return usr;
+    }
+
+    public User updateUser(User usr, String pwd) {
+        for(User u : user)
+            if(u.getName().equals(usr.getName())) {
+                u.setNick(usr.getNick());
+                printAllUsers(); //TODO: temporary function
+                return usr;
+            }
+        printAllUsers(); //TODO: temporary function
+        return null;
+    }
+
+    public boolean deleteUser(User usr, String pwd) {
+        //TODO: sql로 직접
+        for(int i = 0; i < user.size(); i++) {
+            if(user.get(i).getName().equals(usr.getName())) {
+                user.remove(i);
+                printAllUsers(); //TODO: temporary function
+                return true;
+            }
+        }
+        printAllUsers(); //TODO: temporary function
+        return false;
+    }
+
+    //TODO: temporary function
+    public void printAllUsers() {
+        for (User u:user) {
+            System.out.println(u.getName() + " : " + u.getNick());
+        }
     }
 
     public ArrayList<Rollingpaper> getRollingpaperLists(User user) {
@@ -95,6 +129,7 @@ public class DAO {
                     if(pwd == null || !pwd.equals("1234")) return null;
                 }
                 p.setContent(content);
+                
                 return refreshRollingpaper(user, p);
             }
         }

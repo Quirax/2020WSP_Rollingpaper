@@ -1,15 +1,13 @@
 package com.quiraxical.rollingpaper;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class MypageController extends Controller {
-
+public class PartController extends Controller {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -19,10 +17,15 @@ public class MypageController extends Controller {
             return;
         }
 
+        //use RSA Crypto
         DAO dao = DAO.getInstance();
-        ArrayList<Rollingpaper> paper = dao.getRollingpaperLists(user);
-        session.setAttribute("rp", paper);
+        if(!dao.deleteUser(user, request.getParameter("pwd"))) {
+            this.error(response, "mypage.do", "탈퇴 처리 도중 문제가 발생하였습니다.\n관리자에게 문의하세요.");
+            return;
+        }
 
-        this.forward(request, response, "my.jsp");
+        session.setAttribute("user", null);
+
+        this.forward(request, response, "index.jsp");
     }
 }

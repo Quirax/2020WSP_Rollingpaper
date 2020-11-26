@@ -4,10 +4,12 @@
 <%
 String[] custom_css = { "css/my.css" };
 String[] preload_js = { "js/my.js" };
+
+User user = (User) session.getAttribute("user");
 %>
 <%@ include file="template/header.jsp" %>
 <div class="view">
-    <h1>킈락 님의 마이페이지</h1>
+    <h1><%= user.getNick() %> 님의 마이페이지</h1>
     <h2>내가 연 롤링 페이퍼 목록</h2>
     <table id="list">
         <thead>
@@ -23,7 +25,7 @@ String[] preload_js = { "js/my.js" };
         </thead>
         <tbody>
             <%
-ArrayList<Rollingpaper> paper = (ArrayList<Rollingpaper>) request.getAttribute("rp");
+ArrayList<Rollingpaper> paper = (ArrayList<Rollingpaper>) session.getAttribute("rp");
 for(Rollingpaper rp : paper) {
             %>
             <tr>
@@ -49,6 +51,6 @@ for(Rollingpaper rp : paper) {
             %>
         </tbody>
     </table>
-    <a id="modify" href="">회원정보 수정</a>
+    <a id="modify" href="modifyPage.do">회원정보 수정</a>
 </div>
 <%@ include file="template/footer.jsp" %>

@@ -31,6 +31,8 @@ public class FrontController extends HttpServlet {
         map.put("/join.do", new JoinController());
         map.put("/joinPage.do", new LoginPageController(1));
         map.put("/modifyPage.do", new LoginPageController(2));
+        map.put("/modify.do", new ModifyController());
+        map.put("/part.do", new PartController());
     }
 
     @Override

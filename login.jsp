@@ -30,6 +30,7 @@
             break;
         case 2:
             title = "회원정보 수정";
+            action = "modify.do";
             submitText = "수정하기";
             break;
         case 3:
@@ -47,7 +48,7 @@
         <input type="hidden" name="id" value="<%= request.getParameter("id") %>" />
         <% } %>
         <table>
-            <% if (mode != 3) { %>
+            <% if (mode != 2 && mode != 3) { %>
             <tr>
                 <th>아이디</th>
                 <td><input type="text" maxlength="250" name="name" required /></td>
@@ -71,6 +72,11 @@
                     </div>
                 </td>
             </tr>
+            <% if (mode == 2) { %>
+            <tr>
+                <td colspan="2"><a id="modify" href="part.do">탈퇴하기</a></td>
+            </tr>
+            <% } %>
         </table>
     </form>
 </div>
