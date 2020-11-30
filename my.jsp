@@ -25,7 +25,7 @@ User user = (User) session.getAttribute("user");
         </thead>
         <tbody>
             <%
-ArrayList<Rollingpaper> paper = (ArrayList<Rollingpaper>) session.getAttribute("rp");
+ArrayList<Rollingpaper> paper = (ArrayList<Rollingpaper>) session.getAttribute("rpl");
 for(Rollingpaper rp : paper) {
             %>
             <tr>

@@ -1,205 +1,465 @@
 package com.quiraxical.rollingpaper;
 
+import java.sql.*;
 import java.util.ArrayList;
+import javax.naming.*;
+import javax.sql.DataSource;
 
 public class DAO {
     private static DAO instance = new DAO();
-
-    /***
-     * mockup part
-     * TODO: 데이터베이스 연결 시 이 파트는 삭제할 것
-     ***/
-    public ArrayList<User> user = null;
-    private ArrayList<Rollingpaper> paper = null;
-    private ArrayList<RollingpaperContent> content = null;
     
     private DAO() {
-        /***
-         * mockup part
-         * TODO: 데이터베이스 연결 시 이 파트는 삭제할 것
-         ***/
-        user = new ArrayList<User>();
-        User usr = new User();
-        usr.setName("quirax");
-        usr.setNick("킈락");
-        user.add(usr);
+    }
 
-        paper = new ArrayList<Rollingpaper>();
-        for (int i = 1; i <= 5; i++) {
-            Rollingpaper rp = new Rollingpaper();
-            rp.setId(i);
-            rp.setTitle("롤링페이퍼 #" + i);
-            rp.setTo("대상자 #" + i * i);
-            rp.setUser(usr);
-            rp.setIsClosed(i % 2 == 0);
-            paper.add(rp);
-        }
+    private Connection connect() throws NamingException, SQLException {
+        Context initContext = new InitialContext();
+        Context envContext = (Context)initContext.lookup("java:/comp/env");
+        DataSource ds = (DataSource)envContext.lookup("jdbc/mysql");
+        return ds.getConnection();
+    }
 
-        content = new ArrayList<RollingpaperContent>();
-        for (int i = 1; i <= 5; i++) {
-            RollingpaperContent rpc = new RollingpaperContent();
-            rpc.setId(i);
-            rpc.setText("아무말 대잔치 " + i);
-            rpc.setFrom("보낸사람 #" + i);
-            content.add(rpc);
+    private void disconnect(Connection conn) throws SQLException {
+        if(conn != null) {
+            conn.close();
+            conn = null;
         }
-        
-        printAllUsers(); //TODO: temporary function
     }
 
     public static DAO getInstance() {
         return instance;
     }
 
-    public User findUser(String name, String pwd) {
-        //TODO: sql로 직접
-        for(User u : user) {
-            if(u.getName().equals(name)) {
-                if(pwd == null || !pwd.equals("1234")) return null;
-                return u;
-            }
+    public User findUser(String name, String pwd) throws SQLException, NamingException {
+        if(pwd == null || pwd.equals("")) return null;
+
+        Connection conn = connect();
+        
+        PreparedStatement pstmt = null;
+
+        String sql = "select * from users where u_name=? and u_pwd=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1,name);
+        pstmt.setString(2,pwd);
+
+        ResultSet rs = pstmt.executeQuery();
+
+        if(!rs.next()) {
+            return null;
         }
-        return null;
+
+        User user = new User();
+        user.setName(name);
+        user.setNick(rs.getString("u_nick"));
+
+        rs.close();
+        pstmt.close();
+        disconnect(conn);
+
+        return user;
     }
 
-    public User createUser(String name, String pwd, String nick) {
-        User usr = new User();
-        for(User u : user)
-            if(u.getName().equals(name)) return null;
-        usr.setName(name);
-        usr.setNick(nick);
-        user.add(usr);
-        printAllUsers(); //TODO: temporary function
-        return usr;
-    }
+    public User createUser(String name, String pwd, String nick) throws NamingException, SQLException {
+        User user = new User();
+        user.setName(name);
+        user.setNick(nick);
+        
+        if(pwd == null || pwd.equals("")) return null;
 
-    public User updateUser(User usr, String pwd) {
-        for(User u : user)
-            if(u.getName().equals(usr.getName())) {
-                u.setNick(usr.getNick());
-                printAllUsers(); //TODO: temporary function
-                return usr;
-            }
-        printAllUsers(); //TODO: temporary function
-        return null;
-    }
+        Connection conn = connect();
+        
+        PreparedStatement pstmt = null;
 
-    public boolean deleteUser(User usr, String pwd) {
-        //TODO: sql로 직접
-        for(int i = 0; i < user.size(); i++) {
-            if(user.get(i).getName().equals(usr.getName())) {
-                user.remove(i);
-                printAllUsers(); //TODO: temporary function
-                return true;
-            }
+        String sql = "insert into users(u_name, u_pwd, u_nick) values(?, ?, ?);";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1,name);
+        pstmt.setString(2,pwd);
+        pstmt.setString(3,nick);
+
+        pstmt.executeUpdate();
+
+        if(pstmt.getUpdateCount() <= 0) {
+            pstmt.close();
+            disconnect(conn);
+            return null;
         }
-        printAllUsers(); //TODO: temporary function
-        return false;
+
+        pstmt.close();
+        disconnect(conn);
+        return user;
     }
 
-    //TODO: temporary function
-    public void printAllUsers() {
-        for (User u:user) {
-            System.out.println(u.getName() + " : " + u.getNick());
+    public User updateUser(User user, String pwd) throws SQLException, NamingException {
+        if(pwd == null || pwd.equals("")) return null;
+
+        Connection conn = connect();
+        
+        PreparedStatement pstmt = null;
+
+        String sql = "update users set u_pwd=?, u_nick=? where u_name=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(3,user.getName());
+        pstmt.setString(1,pwd);
+        pstmt.setString(2,user.getNick());
+
+        pstmt.executeUpdate();
+
+        if(pstmt.getUpdateCount() <= 0) {
+            pstmt.close();
+            disconnect(conn);
+            return null;
         }
+
+        pstmt.close();
+        disconnect(conn);
+        return user;
     }
 
-    public ArrayList<Rollingpaper> getRollingpaperLists(User user) {
-        //TODO: sql로 직접
+    public boolean deleteUser(User user, String pwd) throws NamingException, SQLException {
+        if(pwd == null || pwd.equals("")) return false;
+
+        Connection conn = connect();
+
+        conn.setAutoCommit(false);
+        
+        PreparedStatement pstmt = null;
+
+        String sql = "delete from rollingpaper_content where r_id in (select r_id from rollingpaper where u_name=?);";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1,user.getName());
+
+        pstmt.executeUpdate();
+
+        pstmt.close();
+
+        sql = "delete from rollingpaper where u_name=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1,user.getName());
+
+        pstmt.executeUpdate();
+
+        sql = "delete from users where u_name=? and u_pwd=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1,user.getName());
+        pstmt.setString(2,pwd);
+
+        pstmt.executeUpdate();
+
+        if(pstmt.getUpdateCount() <= 0) {
+            pstmt.close();
+            conn.rollback();
+            disconnect(conn);
+            return false;
+        }
+
+        pstmt.close();
+        conn.commit();
+        disconnect(conn);
+        return true;
+    }
+
+    public ArrayList<Rollingpaper> getRollingpaperLists(User user) throws NamingException, SQLException {
         ArrayList<Rollingpaper> list = new ArrayList<Rollingpaper>();
-        for(Rollingpaper r : paper) {
-            if(r.getUser().getName().equals(user.getName())) list.add(r);
+
+        Connection conn = connect();
+        
+        PreparedStatement pstmt = null;
+
+        String sql = "select * from rollingpaper where u_name=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1,user.getName());
+
+        ResultSet rs = pstmt.executeQuery();
+
+        while(rs.next()) {
+            Rollingpaper p = new Rollingpaper();
+            p.setId(rs.getInt("r_id"));
+            p.setUser(user);
+            p.setTo(rs.getString("r_to"));
+            p.setTitle(rs.getString("r_title"));
+            p.setIsClosed(rs.getBoolean("r_isClosed"));
+            list.add(p);
         }
+
+        rs.close();
+        pstmt.close();
+        disconnect(conn);
+
         return list;
     }
 
-    public void createRollingpaper(User user, Rollingpaper rp, String pwd) {
-        //TODO: sql로 직접
-        rp.setId(paper.size() + 1);
-        rp.setUser(user);
-        paper.add(rp);
+    public void createRollingpaper(User user, Rollingpaper rp, String pwd) throws NamingException, SQLException {
+        if(pwd == null || pwd.equals("")) return;
+
+        Connection conn = connect();
+        
+        PreparedStatement pstmt = null;
+
+        String sql = "insert into rollingpaper(u_name, r_to, r_title, r_pwd) values(?, ?, ?, ?);";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1,user.getName());
+        pstmt.setString(4,pwd);
+        pstmt.setString(2,rp.getTo());
+        pstmt.setString(3,rp.getTitle());
+
+        pstmt.executeUpdate();
+
+        pstmt.close();
+        disconnect(conn);
     }
 
-    public Rollingpaper getRollingpaper(User user, int id,String pwd) {
+    public Rollingpaper getRollingpaper(User user, int id,String pwd) throws NamingException, SQLException {
         if (id == 0) return null;
-        //TODO: sql로 직접
-        for(Rollingpaper p : paper) {
-            if(p.getId() == id) {
-                if(user == null || !user.getName().equals(p.getUser().getName())) {
-                    if(pwd == null || !pwd.equals("1234")) return null;
-                }
-                p.setContent(content);
-                
-                return refreshRollingpaper(user, p);
-            }
+        
+        Connection conn = connect();
+        
+        PreparedStatement pstmt = null;
+
+        String sql = "select * from rollingpaper where r_id=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,id);
+
+        ResultSet rs = pstmt.executeQuery();
+
+        if(!rs.next()) return null;
+
+        if(user == null || !user.getName().equals(rs.getString("u_name"))) {
+            if(pwd == null || !pwd.equals(rs.getString("r_pwd"))) return null;
         }
-        return null;
+
+        Rollingpaper p = new Rollingpaper();
+        p.setId(rs.getInt("r_id"));
+        p.setUser(user);
+        p.setTo(rs.getString("r_to"));
+        p.setTitle(rs.getString("r_title"));
+        p.setIsClosed(rs.getBoolean("r_isClosed"));
+
+        rs.close();
+        pstmt.close();
+        disconnect(conn);
+
+        return refreshRollingpaper(user, p);
     }
 
-    public Rollingpaper refreshRollingpaper(User user, Rollingpaper rp) {
-        //TODO: sql로 직접
-        //if(user != null && !user.getName().equals("") && !user.getName().equals(rp.getUser().getName())) return null;
-        //rp.setContent(content);
-        return rp;
-    }
+    public Rollingpaper refreshRollingpaper(User user, Rollingpaper rp) throws NamingException, SQLException {
+        ArrayList<RollingpaperContent> content = new ArrayList<RollingpaperContent>();
 
-    public Rollingpaper changeRollingpaperPassword(User user, Rollingpaper rp, String pwd) {
-        //TODO: sql로 직접
-        if(user == null || !user.getName().equals(rp.getUser().getName())) return null;
-        return rp;
-    }
+        Connection conn = connect();
 
-    public Rollingpaper closeRollingpaper(User user, Rollingpaper rp) {
-        if(user == null || !user.getName().equals(rp.getUser().getName())) return null;
-        rp.setIsClosed(true);
-        return rp;
-    }
+        PreparedStatement pstmt = null;
 
-    public Rollingpaper closeRollingpaper(User user, int id) {
-        if (id == 0) return null;
-        //TODO: sql로 직접
-        for(Rollingpaper p : paper) {
-            if(p.getId() == id) {
-                if(user == null || !user.getName().equals(p.getUser().getName())) return null;
-                p.setIsClosed(true);
-                return p;
-            }
+        String sql = "select * from rollingpaper_content where r_id=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,rp.getId());
+
+        ResultSet rs = pstmt.executeQuery();
+
+        while(rs.next()) {
+            RollingpaperContent rc = new RollingpaperContent();
+            rc.setId(rs.getInt("rc_id"));
+            rc.setText(rs.getString("rc_text"));
+            rc.setFrom(rs.getString("rc_from"));
+            content.add(rc);
         }
-        return null;
-    }
 
-    public boolean deleteRollingpaper(User user, int id) {
-        if (id == 0) return false;
-        //TODO: sql로 직접
-        for(int i = 0; i < paper.size(); i++) {
-            if(paper.get(i).getId() == id) {
-                if(user == null || !user.getName().equals(paper.get(i).getUser().getName())) return false;
-                paper.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void createRollingpaperContent(Rollingpaper rp, RollingpaperContent rpc, String pwd) {
-        //TODO: sql로 직접
-        ArrayList<RollingpaperContent> content = rp.getContent();
-        content.add(rpc);
         rp.setContent(content);
+
+        rs.close();
+        pstmt.close();
+        disconnect(conn);
+
+        return rp;
+    }
+
+    public Rollingpaper changeRollingpaperPassword(User user, Rollingpaper rp, String pwd)
+            throws NamingException, SQLException {
+        if(pwd == null || pwd.equals("")) return null;
+
+        Connection conn = connect();
+
+        PreparedStatement pstmt = null;
+
+        String sql = "update rollingpaper set r_pwd=? where r_id=? and u_name=?";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, pwd);
+        pstmt.setInt(2, rp.getId());
+        pstmt.setString(3, user.getName());
+
+        pstmt.executeUpdate();
+
+        System.out.println(sql + " / " + pwd + " / " + rp.getId() + " / " + user.getName());
+
+        if(pstmt.getUpdateCount() <= 0) {
+            pstmt.close();
+            disconnect(conn);
+            return null;
+        }
+
+        pstmt.close();
+        disconnect(conn);
+        return rp;
+    }
+
+    public boolean closeRollingpaper(User user, Rollingpaper rp) throws NamingException, SQLException {
+        return closeRollingpaper(user, rp.getId());
+    }
+
+    public boolean closeRollingpaper(User user, int id) throws NamingException, SQLException {
+        if (id == 0) return false;
+        
+        Connection conn = connect();
+
+        PreparedStatement pstmt = null;
+
+        String sql = "update rollingpaper set r_isClosed=true where r_id=? and u_name=?";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,id);
+        pstmt.setString(2, user.getName());
+
+        pstmt.executeUpdate();
+
+        if(pstmt.getUpdateCount() <= 0) {
+            pstmt.close();
+            disconnect(conn);
+            return false;
+        }
+
+        pstmt.close();
+        disconnect(conn);
+        return true;
+    }
+
+    public boolean deleteRollingpaper(User user, int id) throws NamingException, SQLException {
+        if (id == 0) return false;
+
+        Connection conn = connect();
+
+        conn.setAutoCommit(false);
+        
+        PreparedStatement pstmt = null;
+
+        String sql = "delete from rollingpaper_content where r_id=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,id);
+
+        pstmt.executeUpdate();
+
+        pstmt.close();
+
+        sql = "delete from rollingpaper where u_name=? and r_id=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1,user.getName());
+        pstmt.setInt(2,id);
+
+        pstmt.executeUpdate();
+
+        if(pstmt.getUpdateCount() <= 0) {
+            conn.rollback();
+            pstmt.close();
+            disconnect(conn);
+            return false;
+        }
+
+        conn.commit();
+        pstmt.close();
+        disconnect(conn);
+        return true;
+    }
+
+    public void createRollingpaperContent(Rollingpaper rp, RollingpaperContent rpc, String pwd)
+            throws NamingException, SQLException {
+        if(pwd == null || pwd.equals("")) return;
+
+        Connection conn = connect();
+        
+        PreparedStatement pstmt = null;
+
+        String sql = "select max(rc_id) as rc_id from rollingpaper_content where r_id=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, rp.getId());
+
+        ResultSet rs = pstmt.executeQuery();
+        
+        if(!rs.next()) return;
+
+        int id = rs.getInt("rc_id") + 1;
+
+        rs.close();
+        pstmt.close();
+
+        sql = "insert into rollingpaper_content(rc_id, r_id, rc_text, rc_pwd, rc_from) values(?, ?, ?, ?, ?);";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,id);
+        pstmt.setString(4,pwd);
+        pstmt.setInt(2,rp.getId());
+        pstmt.setString(3,rpc.getText());
+        pstmt.setString(5, rpc.getFrom());
+
+        pstmt.executeUpdate();
+
+        pstmt.close();
+        disconnect(conn);
     }
     
-    public Rollingpaper deleteRollingpaperContent(User user, Rollingpaper rp, int id, String pwd) {
-        //TODO: sql로 직접
-        ArrayList<RollingpaperContent> content = rp.getContent();
-        for(int i = 0; i < content.size(); i++)
-            if(content.get(i).getId() == id) {
-                if(user == null || !user.getName().equals(rp.getUser().getName())) {
-                    if(pwd == null || !pwd.equals("1234")) return null;
-                }
-                content.remove(i);
-                rp.setContent(content);
-                return rp;
-            }
-        return null;
+    public Rollingpaper deleteRollingpaperContent(User user, Rollingpaper rp, int id, String pwd)
+            throws NamingException, SQLException {
+        Connection conn = connect();
+        
+        PreparedStatement pstmt = null;
+
+        String sql = "select * from rollingpaper where r_id=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,rp.getId());
+
+        ResultSet rs = pstmt.executeQuery();
+
+        if(!rs.next()) return null;
+
+        boolean isOwner = false;
+
+        sql = "delete from rollingpaper_content where r_id=? and rc_id=?";
+
+        if(user == null || !user.getName().equals(rs.getString("u_name"))) {
+            if(pwd == null || pwd.equals("")) return null;
+
+            sql += " and rc_pwd=?;";
+            isOwner = false;
+        } else isOwner = true;
+
+        rs.close();
+        pstmt.close();
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, rp.getId());
+        pstmt.setInt(2,id);
+        if(!isOwner) pstmt.setString(3,pwd);
+
+        pstmt.executeUpdate();
+
+        if(pstmt.getUpdateCount() <= 0) {
+            pstmt.close();
+            disconnect(conn);
+            return null;
+        }
+
+        pstmt.close();
+        disconnect(conn);
+        return rp;
     }
 }

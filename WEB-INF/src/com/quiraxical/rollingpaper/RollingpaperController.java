@@ -1,7 +1,9 @@
 package com.quiraxical.rollingpaper;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,12 +20,12 @@ public class RollingpaperController extends Controller {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if(toPrint && (user == null || user.getName().equals(""))) {
+        if (toPrint && (user == null || user.getName().equals(""))) {
             this.error(response, "login.jsp", "잘못된 접근입니다");
             return;
         }
 
-        //TODO: use RSA Crypto
+        // TODO: use RSA Crypto
 
         Rollingpaper paper = (Rollingpaper) session.getAttribute("rp");
         DAO dao = DAO.getInstance();
@@ -35,15 +37,20 @@ public class RollingpaperController extends Controller {
         } catch (NumberFormatException e) {
             id = 0;
         }
-        
-        if(paper == null || (id > 0 && paper.getId() != id)) {
-            if((user == null || user.getName().equals("")) && request.getParameter("pwd") == null) {
-                new LoginPageController(3).execute(request, response);
-                return;
+
+        try {
+            if (paper == null || (id > 0 && paper.getId() != id)) {
+                if ((user == null || user.getName().equals("")) && request.getParameter("pwd") == null) {
+                    new LoginPageController(3).execute(request, response);
+                    return;
+                }
+                paper = dao.getRollingpaper(user, id, request.getParameter("pwd"));
+            } else {
+                paper = dao.refreshRollingpaper(user, paper);
             }
-            paper = dao.getRollingpaper(user, id, request.getParameter("pwd"));
-        } else {
-            paper = dao.refreshRollingpaper(user, paper);
+        } catch (NamingException | SQLException e) {
+            e.printStackTrace();
+            paper = null;
         }
 
         if(paper == null) {

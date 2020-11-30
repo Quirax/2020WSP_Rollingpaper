@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" %>
 <%
 String[] custom_css = { "css/create.css" };
-String[] preload_js = { "js/create.js" };
+String[] preload_js = { "js/sha256.js", "js/create.js" };
 %>
 <%@ include file="template/header.jsp" %>
 <div class="view center">

@@ -14,10 +14,6 @@ public class FrontController extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         map = new HashMap<String, Controller>();
 
-        /***
-         * TODO: 액션과 컨트롤러 바인딩
-         * usage: map.put("/action.do", new Controller());
-         ***/
         map.put("/mypage.do", new MypageController());
         map.put("/createRP.do", new CreateRPController());
         map.put("/login.do", new LoginController());
@@ -33,6 +29,7 @@ public class FrontController extends HttpServlet {
         map.put("/modifyPage.do", new LoginPageController(2));
         map.put("/modify.do", new ModifyController());
         map.put("/part.do", new PartController());
+        map.put("/partPage.do", new LoginPageController(4));
     }
 
     @Override

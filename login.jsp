@@ -3,7 +3,7 @@
     String[] custom_css = {
         "css/login.css"
     };
-    String[] preload_js = { "js/login.js" };
+    String[] preload_js = { "js/sha256.js", "js/login.js" };
 %>
 <%@ include file="template/header.jsp" %>
 <%
@@ -38,6 +38,11 @@
             action = "rollingpaper.do";
             submitText = "열기";
             break;
+        case 4:
+            title = "회원 탈퇴";
+            action = "part.do";
+            submitText = "탈퇴하기";
+            break;
     }
 %>
 <div class="view center slideFx">
@@ -48,7 +53,7 @@
         <input type="hidden" name="id" value="<%= request.getParameter("id") %>" />
         <% } %>
         <table>
-            <% if (mode != 2 && mode != 3) { %>
+            <% if (mode == 0 || mode == 1) { %>
             <tr>
                 <th>아이디</th>
                 <td><input type="text" maxlength="250" name="name" required /></td>
@@ -74,7 +79,7 @@
             </tr>
             <% if (mode == 2) { %>
             <tr>
-                <td colspan="2"><a id="modify" href="part.do">탈퇴하기</a></td>
+                <td colspan="2"><a id="modify" href="partPage.do">탈퇴하기</a></td>
             </tr>
             <% } %>
         </table>
