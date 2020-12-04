@@ -1,9 +1,6 @@
 package com.quiraxical.rollingpaper;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,13 +16,13 @@ public class PartController extends Controller {
             return;
         }
 
-        // use RSA Crypto
+        RSA rsa = RSA.getInstance();
         DAO dao = DAO.getInstance();
         boolean result = false;
 
         try {
-            result = dao.deleteUser(user, request.getParameter("pwd"));
-        } catch (NamingException | SQLException e) {
+            result = dao.deleteUser(user, rsa.decrypt(request.getParameter("pwd"), request));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
