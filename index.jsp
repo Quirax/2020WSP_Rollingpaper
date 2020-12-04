@@ -19,9 +19,6 @@
             <a class="button" href="login.jsp" id="login">롤링 페이퍼<br />만들러 가기</a><br/>
             <span>로그인 및 회원가입 필요</span>
         </div>
-        <div>
-            <a class="button" href="" id="find">롤링 페이퍼<br />찾아가기</a>
-        </div>
     </div>
 </div>
 <%@ include file="template/footer.jsp" %>

@@ -1,9 +1,6 @@
 package com.quiraxical.rollingpaper;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,17 +22,18 @@ public class CreateRPController extends Controller {
         rp.setTitle(request.getParameter("title"));
         rp.setTo(request.getParameter("to"));
 
-        // TODO: use RSA Cryption
-
+        RSA rsa = RSA.getInstance();
         DAO dao = DAO.getInstance();
 
         try {
-            dao.createRollingpaper(user, rp, request.getParameter("pwd"));
-        } catch (NamingException | SQLException e) {
+            dao.createRollingpaper(user, rp, rsa.decrypt(request.getParameter("pwd"), request));
+        } catch (Exception e) {
             e.printStackTrace();
             this.error(response, "", "롤링 페이퍼를 만드는 도중 오류가 발생하였습니다. 관리자에게 문의하세요.");
             return;
         }
+
+        rsa.destory(request);
 
         response.sendRedirect("mypage.do");
     }

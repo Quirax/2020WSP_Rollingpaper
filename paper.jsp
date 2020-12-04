@@ -3,7 +3,8 @@
 <%@ page import="com.quiraxical.rollingpaper.*" %>
 <%
 String[] custom_css = { "css/paper.css" };
-String[] preload_js = { "js/sha256.js", "js/paper.js" };
+String[] preload_js = { "js/paper.js" };
+request.setAttribute("isEncryptRequired", (Boolean) true);
 %>
 <%@ include file="template/header.jsp" %>
 <%
@@ -63,5 +64,7 @@ for (RollingpaperContent cnt : content) {
             </div>
         </form>
     </div>
+    <input type="hidden" id="rsa_modulus" value="${modulus}" />
+    <input type="hidden" id="rsa_exp" value="${exp}" />
 </div>
 <%@ include file="template/footer.jsp" %>

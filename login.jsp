@@ -3,7 +3,8 @@
     String[] custom_css = {
         "css/login.css"
     };
-    String[] preload_js = { "js/sha256.js", "js/login.js" };
+    String[] preload_js = { "js/login.js" };
+    request.setAttribute("isEncryptRequired", (Boolean) true);
 %>
 <%@ include file="template/header.jsp" %>
 <%
@@ -47,6 +48,8 @@
 %>
 <div class="view center slideFx">
     <h2><%= title %></h2>
+    <input type="hidden" id="rsa_modulus" value="${modulus}" />
+    <input type="hidden" id="rsa_exp" value="${exp}" />
     <form id="login_form" action="<%= action %>" method="post">
         <% if (mode == 3) { %>
         <p>롤링 페이퍼를 보려면 미리 공유된 비밀번호를 입력하십시오.</p>

@@ -1,9 +1,6 @@
 package com.quiraxical.rollingpaper;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,13 +27,15 @@ public class WriteContentController extends Controller {
         }
 
         DAO dao = DAO.getInstance();
-        // TODO; use RSA Crypto
+        RSA rsa = RSA.getInstance();
 
         try {
-            dao.createRollingpaperContent(paper, content, request.getParameter("pwd"));
-        } catch (NamingException | SQLException e) {
+            dao.createRollingpaperContent(paper, content, rsa.decrypt(request.getParameter("pwd"), request));
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+        rsa.destory(request);
 
         response.sendRedirect("rollingpaper.do");
     }

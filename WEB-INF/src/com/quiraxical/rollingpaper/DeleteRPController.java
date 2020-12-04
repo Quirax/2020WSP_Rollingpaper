@@ -19,8 +19,6 @@ public class DeleteRPController extends Controller {
             return;
         }
 
-        // TODO: use RSA crypto
-
         DAO dao = DAO.getInstance();
         boolean result = false;
         int id;

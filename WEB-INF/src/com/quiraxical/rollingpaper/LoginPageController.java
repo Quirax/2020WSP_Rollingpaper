@@ -16,6 +16,7 @@ public class LoginPageController extends Controller {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("mode", mode);
+        
         this.forward(request, response, "login.jsp");
     }
 }

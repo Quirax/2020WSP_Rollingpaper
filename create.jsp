@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" %>
 <%
 String[] custom_css = { "css/create.css" };
-String[] preload_js = { "js/sha256.js", "js/create.js" };
+String[] preload_js = { "js/create.js" };
+request.setAttribute("isEncryptRequired", (Boolean) true);
 %>
 <%@ include file="template/header.jsp" %>
 <div class="view center">
+    <input type="hidden" id="rsa_modulus" value="${modulus}" />
+    <input type="hidden" id="rsa_exp" value="${exp}" />
     <form action="createRP.do" method="post" autocomplete="off">
         <div>
             <h2><input type="text" name="to" maxlength="30" placeholder="이름" autocomplete="off" required />을(를) 위한</h2>

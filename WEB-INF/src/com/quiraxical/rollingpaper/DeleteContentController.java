@@ -1,9 +1,6 @@
 package com.quiraxical.rollingpaper;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,15 +21,14 @@ public class DeleteContentController extends Controller {
             return;
         }
 
-        // TODO: use RSA crypto
-
+        RSA rsa = RSA.getInstance();
         DAO dao = DAO.getInstance();
         Rollingpaper rp;
         
         try {
             rp = dao.deleteRollingpaperContent(user, (Rollingpaper) session.getAttribute("rp"), id,
-                    request.getParameter("pwd"));
-        } catch (NamingException | SQLException e) {
+                rsa.decrypt(request.getParameter("pwd"), request));
+        } catch (Exception e) {
             e.printStackTrace();
             rp = null;
         }
@@ -41,6 +37,8 @@ public class DeleteContentController extends Controller {
             this.error(response, "rollingpaper.do", "삭제를 진행할 수 없습니다. 비밀번호가 잘못되었을 수 있습니다.\n만약 삭제를 원하는 경우 생성자에게 문의하시기 바랍니다.");
             return;
         }
+
+        rsa.destory(request);
 
         session.setAttribute("rp", rp);
 

@@ -11,9 +11,12 @@ onLoad(function() {
     $(".submit_form").click(function() {
         var $form = $(this).parents("form");
         var form = $form[0];
-        plain = $form.find("input[name='pwd']").val();
-        $form.find("input[name='pwd']").val(sha256(plain));
         if(!checkForm(form)) return;
+
+        plain = $form.find("input[name='pwd']").val();
+
+        var rsa = new RSA($("#rsa_modulus").val(), $("#rsa_exp").val());
+        $form.find("input[name='pwd']").val(rsa.encrypt(sha256(plain)));
         $(".form_wrapper").css("display", "none");
         form.submit();
     });

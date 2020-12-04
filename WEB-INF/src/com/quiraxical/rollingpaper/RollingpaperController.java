@@ -1,9 +1,6 @@
 package com.quiraxical.rollingpaper;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +22,7 @@ public class RollingpaperController extends Controller {
             return;
         }
 
-        // TODO: use RSA Crypto
+        RSA rsa = RSA.getInstance();
 
         Rollingpaper paper = (Rollingpaper) session.getAttribute("rp");
         DAO dao = DAO.getInstance();
@@ -44,11 +41,16 @@ public class RollingpaperController extends Controller {
                     new LoginPageController(3).execute(request, response);
                     return;
                 }
-                paper = dao.getRollingpaper(user, id, request.getParameter("pwd"));
+
+                String pwd = "";
+                try {
+                    pwd = rsa.decrypt(request.getParameter("pwd"), request);
+                } catch (Exception e) { }
+                paper = dao.getRollingpaper(user, id, pwd);
             } else {
                 paper = dao.refreshRollingpaper(user, paper);
             }
-        } catch (NamingException | SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             paper = null;
         }

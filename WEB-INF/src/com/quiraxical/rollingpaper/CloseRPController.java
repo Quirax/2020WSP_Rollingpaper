@@ -19,8 +19,6 @@ public class CloseRPController extends Controller {
             return;
         }
 
-        // TODO: use RSA crypto
-
         Rollingpaper paper = (Rollingpaper) session.getAttribute("rp");
         boolean result = false;
         DAO dao = DAO.getInstance();

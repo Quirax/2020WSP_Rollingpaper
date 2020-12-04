@@ -3,7 +3,7 @@
 <%@ page import="com.quiraxical.rollingpaper.*" %>
 <%
 String[] custom_css = { "css/print.css" };
-String[] preload_js = { "js/print.js" };
+String[] preload_js = {  };
 %>
 <%@ include file="template/header.jsp" %>
 <%
