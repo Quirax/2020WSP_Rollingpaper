@@ -17,9 +17,12 @@ public class RollingpaperController extends Controller {
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if (toPrint && (user == null || user.getName().equals(""))) {
-            this.error(response, "login.jsp", "잘못된 접근입니다");
-            return;
+        if (toPrint) {
+            try {
+                confirmUser(user, response);
+            } catch (Exception e) {
+                return;
+            }
         }
 
         RSA rsa = RSA.getInstance();
@@ -37,7 +40,7 @@ public class RollingpaperController extends Controller {
 
         try {
             if (paper == null || (id > 0 && paper.getId() != id)) {
-                if ((user == null || user.getName().equals("")) && request.getParameter("pwd") == null) {
+                if (!toPrint && !isValidUser(user) && request.getParameter("pwd") == null) {
                     new LoginPageController(3).execute(request, response);
                     return;
                 }
@@ -45,7 +48,9 @@ public class RollingpaperController extends Controller {
                 String pwd = "";
                 try {
                     pwd = rsa.decrypt(request.getParameter("pwd"), request);
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 paper = dao.getRollingpaper(user, id, pwd);
             } else {
                 paper = dao.refreshRollingpaper(user, paper);

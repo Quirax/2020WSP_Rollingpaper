@@ -1,3 +1,9 @@
+function viewPasswordForm(action) {
+    $("#pwd_form").css("display", "flex");
+    $("#pwd_form form *").val("");
+    $("#pwd_form form").attr("action", action);
+}
+
 onLoad(function() {
     $("#add").click(function() {
         $("#content_form").css("display", "flex");
@@ -22,16 +28,12 @@ onLoad(function() {
     });
 
     $("#delete_content").click(function() {
-        $("#pwd_form").css("display", "flex");
-        $("#pwd_form form *").val("");
+        viewPasswordForm("deleteContent.do");
         $("#pwd_form input[name=\"id\"]").val($("#content_view").data("id"));
-        $("#pwd_form form").attr("action", "deleteContent.do");
     });
 
     $("#pwdChange").click(function() {
-        $("#pwd_form").css("display", "flex");
-        $("#pwd_form form *").val("");
-        $("#pwd_form form").attr("action", "changePassword.do");
+        viewPasswordForm("changePassword.do");
     });
 
     $("#closePaper").click(function() {

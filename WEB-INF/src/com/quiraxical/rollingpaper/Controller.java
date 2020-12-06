@@ -30,4 +30,26 @@ public class Controller {
         else out.println("window.location.href = \"" + target + "\";");
         out.println("</script>");
     }
+
+    protected User getUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HttpSession session = request.getSession();
+        return getUser(session, response);
+    }
+
+    protected User getUser(HttpSession session, HttpServletResponse response) throws Exception {
+        User user = (User) session.getAttribute("user");
+        confirmUser(user, response);
+        return user;
+    }
+
+    protected void confirmUser(User user, HttpServletResponse response) throws Exception {
+        if(!isValidUser(user)) {
+            this.error(response, "login.jsp", "잘못된 접근입니다");
+            throw new Exception("인가되지 않은 사용자 정보: " + user.getName());
+        }
+    }
+
+    protected boolean isValidUser(User user) {
+        return user != null && !user.getName().equals("");
+    }
 }

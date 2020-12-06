@@ -13,9 +13,10 @@ public class DeleteRPController extends Controller {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        if(user == null || user.getName().equals("")) {
-            this.error(response, "login.jsp", "잘못된 접근입니다");
+        User user;
+        try {
+            user = getUser(session, response);
+        } catch (Exception e1) {
             return;
         }
 

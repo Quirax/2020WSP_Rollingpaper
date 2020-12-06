@@ -7,6 +7,6 @@ public class RSAFilterRequestWrapper extends HttpServletRequestWrapper {
         super(request);
 
         RSA rsa = RSA.getInstance();
-        rsa.init((HttpServletRequest) request);
+        rsa.init(request);
     }
 }
