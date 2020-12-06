@@ -1,15 +1,16 @@
 <%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" %>
 <%@ page import="java.util.*" %>
 <%@ page import="com.quiraxical.rollingpaper.*" %>
-<%
-String[] custom_css = { "css/my.css" };
-String[] preload_js = { "js/my.js" };
-
-User user = (User) session.getAttribute("user");
-%>
-<%@ include file="template/header.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="qr" tagdir="/WEB-INF/tags" %>
+<qr:include>
+    <qr:css href="css/my.css" />
+    <qr:script href="js/my.js" />
+</qr:include>
+<jsp:useBean scope="session" id="user" type="com.quiraxical.rollingpaper.User" />
+<qr:body>
 <div class="view">
-    <h1><%= user.getNick() %> 님의 마이페이지</h1>
+    <h1>${user.nick} 님의 마이페이지</h1>
     <h2>내가 연 롤링 페이퍼 목록</h2>
     <table id="list">
         <thead>
@@ -24,33 +25,28 @@ User user = (User) session.getAttribute("user");
             </tr>
         </thead>
         <tbody>
-            <%
-ArrayList<Rollingpaper> paper = (ArrayList<Rollingpaper>) session.getAttribute("rpl");
-for(Rollingpaper rp : paper) {
-            %>
-            <tr>
-                <td><%= rp.getId() %></td>
-                <td><%= rp.getTo() %></td>
-                <td><%= rp.getTitle() %>
-            <%
-    if (rp.getIsClosed()) {
-            %>
-                <span class="closed">(닫힘)</span>
-                </td>
-                <td><a class="button print" href="printRP.do?id=<%= rp.getId() %>">인쇄하기</a>
-                <td><a class="button delete" href="deleteRP.do?id=<%= rp.getId() %>">삭제하기</a>
-            <%
-    } else {
-            %>
-                </td>
-                <td><a class="button open" href="rollingpaper.do?id=<%= rp.getId() %>">보러가기</a>
-                <td><a class="button close" href="closeRP.do?id=<%= rp.getId() %>">마감하기</a>
-            <%
-    }
-}
-            %>
+            <c:forEach var="rp" items="${rpl}">
+                <tr>
+                    <td>${rp.id}</td>
+                    <td>${rp.to}</td>
+                    <td>${rp.title}
+                        <c:choose>
+                            <c:when test="${rp.isClosed}">
+                                <span class="closed">(닫힘)</span>
+                    </td>
+                    <td><a class="button print" href="printRP.do?id=${rp.id}">인쇄하기</a>
+                    <td><a class="button delete" href="deleteRP.do?id=${rp.id}">삭제하기</a>
+                            </c:when>
+                            <c:otherwise>
+                    </td>
+                    <td><a class="button open" href="rollingpaper.do?id=${rp.id}">보러가기</a>
+                    <td><a class="button close" href="closeRP.do?id=${rp.id}">마감하기</a>
+                            </c:otherwise>
+                        </c:choose>
+                </tr>
+            </c:forEach>
         </tbody>
     </table>
     <a id="modify" href="modifyPage.do">회원정보 수정</a>
 </div>
-<%@ include file="template/footer.jsp" %>
+</qr:body>

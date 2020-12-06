@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" import="java.util.*" %>
+<%@ tag language="java" pageEncoding="UTF-8" import="java.util.*" body-content="scriptless" %>
+<%@ tag trimDirectiveWhitespaces="true" %>
 <!doctype html>
 <html>
     <head>
@@ -44,3 +45,6 @@ if(preload_js != null) {
 %>
     </head>
     <body>
+        <jsp:doBody />
+    </body>
+</html>

@@ -1,12 +1,11 @@
 <%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" %>
-<%
-    String[] custom_css = {
-        "https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap",
-        "css/index.css"
-    };
-    String[] preload_js = { "js/index.js" };
-%>
-<%@ include file="template/header.jsp" %>
+<%@ taglib prefix="qr" tagdir="/WEB-INF/tags"%>
+<qr:include>
+    <qr:css href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" />
+    <qr:css href="css/index.css" />
+    <qr:script href="js/index.js" />
+</qr:include>
+<qr:body>
 <div class="view center slideFx" id="main">
     <h1>롤링 페이퍼</h1>
     <div id="description">
@@ -21,4 +20,4 @@
         </div>
     </div>
 </div>
-<%@ include file="template/footer.jsp" %>
+</qr:body>

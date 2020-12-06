@@ -1,32 +1,28 @@
 <%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" %>
 <%@ page import="java.util.*" %>
 <%@ page import="com.quiraxical.rollingpaper.*" %>
-<%
-String[] custom_css = { "css/paper.css" };
-String[] preload_js = { "js/paper.js" };
-request.setAttribute("isEncryptRequired", (Boolean) true);
-%>
-<%@ include file="template/header.jsp" %>
-<%
-Rollingpaper paper = (Rollingpaper) session.getAttribute("rp");
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="qr" tagdir="/WEB-INF/tags"%>
+<qr:include>
+    <qr:css href="css/paper.css" />
+    <qr:script href="js/paper.js" />
+</qr:include>
+<qr:encryptRequired />
+<jsp:useBean scope="session" id="rp" type="com.quiraxical.rollingpaper.Rollingpaper" />
+<qr:body>
 <div class="view">
     <h1>
-        <span>To. <%= paper.getTo() %>님</span><br/>
-        <%= paper.getTitle() %>
+        <span>To. ${rp.to}님</span><br/>
+        ${rp.title}
     </h1>
     <ul>
-<%
-ArrayList<RollingpaperContent> content = paper.getContent();
-for (RollingpaperContent cnt : content) {
-%>
-        <li data-id="<%= cnt.getId() %>">
-            <div><%= cnt.getText().replaceAll("\\\n", "<br />") %></div>
-            <div>- <%= cnt.getFrom() %></div>
-        </li>
-<%
-}
-%>
+        <c:forEach var="content" items="${rp.content}">
+            <li data-id="${content.id}">
+                <c:set var="LF" value="\n" />
+                <div>${content.text.replaceAll(LF, "<br />")}</div>
+                <div>- ${content.from}</div>
+            </li>
+        </c:forEach>
         <li id="add">추가하기</li>
     </ul>
     <div id="admin_menu">
@@ -67,4 +63,4 @@ for (RollingpaperContent cnt : content) {
     <input type="hidden" id="rsa_modulus" value="${modulus}" />
     <input type="hidden" id="rsa_exp" value="${exp}" />
 </div>
-<%@ include file="template/footer.jsp" %>
+</qr:body>

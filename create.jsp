@@ -1,10 +1,11 @@
 <%@ page language="java" contentType="text/html;" pageEncoding="UTF-8" %>
-<%
-String[] custom_css = { "css/create.css" };
-String[] preload_js = { "js/create.js" };
-request.setAttribute("isEncryptRequired", (Boolean) true);
-%>
-<%@ include file="template/header.jsp" %>
+<%@ taglib prefix="qr" tagdir="/WEB-INF/tags"%>
+<qr:include>
+    <qr:css href="css/create.css" />
+    <qr:script href="js/create.js" />
+</qr:include>
+<qr:encryptRequired />
+<qr:body>
 <div class="view center">
     <input type="hidden" id="rsa_modulus" value="${modulus}" />
     <input type="hidden" id="rsa_exp" value="${exp}" />
@@ -17,4 +18,4 @@ request.setAttribute("isEncryptRequired", (Boolean) true);
         <a class="button" id="submit" href="javascript:;">롤링 페이퍼 만들기</a>
     </form>
 </div>
-<%@ include file="template/footer.jsp" %>
+</qr:body>
