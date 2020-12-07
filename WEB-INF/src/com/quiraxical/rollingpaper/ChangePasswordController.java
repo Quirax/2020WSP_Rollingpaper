@@ -29,14 +29,11 @@ public class ChangePasswordController extends Controller {
         DAO dao = DAO.getInstance();
 
         try {
-            paper = dao.changeRollingpaperPassword(user, paper, rsa.decrypt(request.getParameter("pwd"), request));
+            dao.changeRollingpaperPassword(user, paper, rsa.decrypt(request.getParameter("pwd"), request));
         } catch (Exception e) {
             e.printStackTrace();
-            paper = null;
-        }
-        
-        if(paper == null) {
             this.error(response, "", "비밀번호를 바꿀 수 없습니다. 관리자에게 문의하세요.");
+            rsa.destory(request);
             return;
         }
 

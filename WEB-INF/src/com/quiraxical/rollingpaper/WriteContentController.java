@@ -33,6 +33,9 @@ public class WriteContentController extends Controller {
             dao.createRollingpaperContent(paper, content, rsa.decrypt(request.getParameter("pwd"), request));
         } catch (Exception e) {
             e.printStackTrace();
+            this.error(response, "", "내용 작성 중 문제가 발생하였습니다. 관리자에게 문의하세요.");
+            rsa.destory(request);
+            return;
         }
 
         rsa.destory(request);

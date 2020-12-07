@@ -6,8 +6,10 @@
 <qr:include>
     <qr:css href="css/paper.css" />
     <qr:script href="js/paper.js" />
+    <qr:script href="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js" />
 </qr:include>
 <qr:encryptRequired />
+<jsp:useBean scope="session" id="user" type="com.quiraxical.rollingpaper.User" />
 <jsp:useBean scope="session" id="rp" type="com.quiraxical.rollingpaper.Rollingpaper" />
 <qr:body>
 <div class="view">
@@ -26,8 +28,11 @@
         <li id="add">추가하기</li>
     </ul>
     <div id="admin_menu">
-        <a class="button" id="pwdChange">비밀번호 변경</a>
-        <a class="button" id="closePaper">마감하기</a>
+        <c:if test="${rp.user.name == user.name}">
+            <a class="button" id="pwdChange">비밀번호 변경</a>
+            <a class="button" id="closePaper">마감하기</a>
+        </c:if>
+        <a class="button" id="sharePaper" data-id="${rp.id}">공유하기</a>
     </div>
     <div class="form_wrapper" id="content_form">
         <form action="writeContent.do" method="post">

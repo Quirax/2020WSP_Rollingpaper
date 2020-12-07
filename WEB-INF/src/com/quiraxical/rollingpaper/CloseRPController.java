@@ -1,9 +1,6 @@
 package com.quiraxical.rollingpaper;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +18,6 @@ public class CloseRPController extends Controller {
         }
 
         Rollingpaper paper = (Rollingpaper) session.getAttribute("rp");
-        boolean result = false;
         DAO dao = DAO.getInstance();
 
         int id;
@@ -33,16 +29,10 @@ public class CloseRPController extends Controller {
         }
 
         try {
-            if (paper == null || (id > 0 && paper.getId() != id)) {
-                result = dao.closeRollingpaper(user, id);
-            } else {
-                result = dao.closeRollingpaper(user, paper);
-            }
-        } catch (NamingException | SQLException e) {
+            if (paper == null || (id > 0 && paper.getId() != id)) dao.closeRollingpaper(user, id);
+            else dao.closeRollingpaper(user, paper);
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        if(!result) {
             this.error(response, "", "롤링페이퍼를 마감할 수 없습니다. 관리자에게 문의하세요.");
             return;
         }

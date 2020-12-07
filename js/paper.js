@@ -42,9 +42,16 @@ onLoad(function() {
     });
     
     $("ul li:not(#add)").click(function() {
-        console.log($(this).data("id"));
         $("#content_view").data("id", $(this).data("id").toString()).css("display", "flex");
         $("#content").html($(this).children("div:first").html());
         $("#from").html($(this).children("div:last").html());
-    })
+    });
+    var clipboard = new ClipboardJS('#sharePaper', {
+        text: function(trigger) {
+            return location.href.split('?')[0] + "?id=" + $("#sharePaper").data("id");
+        }
+    });
+    clipboard.on('success', function(e) {
+        alert("링크 주소가 복사되었습니다.");
+    });
 });

@@ -1,9 +1,6 @@
 package com.quiraxical.rollingpaper;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +18,6 @@ public class DeleteRPController extends Controller {
         }
 
         DAO dao = DAO.getInstance();
-        boolean result = false;
         int id;
 
         try {
@@ -31,12 +27,9 @@ public class DeleteRPController extends Controller {
         }
 
         try {
-            result = dao.deleteRollingpaper(user, id);
-        } catch (NamingException | SQLException e) {
+            dao.deleteRollingpaper(user, id);
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        if(!result) {
             this.error(response, "", "롤링페이퍼를 삭제할 수 없습니다. 관리자에게 문의하세요.");
             return;
         }

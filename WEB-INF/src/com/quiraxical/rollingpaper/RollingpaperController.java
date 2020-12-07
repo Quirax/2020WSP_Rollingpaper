@@ -57,15 +57,14 @@ public class RollingpaperController extends Controller {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            paper = null;
-        }
-
-        if(paper == null) {
             this.error(response, "", "해당하는 롤링 페이퍼를 찾을 수 없습니다.\n"
                 + "입력한 비밀번호가 잘못되었거나, 이미 마감된 롤링 페이퍼일 수 있습니다.\n"
                 + "생성자에게 문의하시기 바랍니다.");
+            rsa.destory(request);
             return;
         }
+        
+        rsa.destory(request);
 
         if(!toPrint && paper.getIsClosed()) {
             this.error(response, "", "이미 마감된 롤링 페이퍼입니다. 관리자에게 문의하세요.");

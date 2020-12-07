@@ -19,20 +19,19 @@ public class PartController extends Controller {
 
         RSA rsa = RSA.getInstance();
         DAO dao = DAO.getInstance();
-        boolean result = false;
 
         try {
-            result = dao.deleteUser(user, rsa.decrypt(request.getParameter("pwd"), request));
+            dao.deleteUser(user, rsa.decrypt(request.getParameter("pwd"), request));
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        if (!result) {
+            rsa.destory(request);
             this.error(response, "mypage.do", "탈퇴 처리 도중 문제가 발생하였습니다.\n관리자에게 문의하세요.");
             return;
         }
 
         session.setAttribute("user", null);
+
+        rsa.destory(request);
 
         this.forward(request, response, "index.jsp");
     }

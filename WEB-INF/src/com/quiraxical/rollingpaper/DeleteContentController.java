@@ -30,11 +30,8 @@ public class DeleteContentController extends Controller {
                 rsa.decrypt(request.getParameter("pwd"), request));
         } catch (Exception e) {
             e.printStackTrace();
-            rp = null;
-        }
-
-        if(rp == null) {
             this.error(response, "rollingpaper.do", "삭제를 진행할 수 없습니다. 비밀번호가 잘못되었을 수 있습니다.\n만약 삭제를 원하는 경우 생성자에게 문의하시기 바랍니다.");
+            rsa.destory(request);
             return;
         }
 

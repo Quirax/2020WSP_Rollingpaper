@@ -17,3 +17,15 @@
     margin: 5px;
     background-color: white;
 }
+
+#modify {
+    display: block;
+    text-align: right;
+    margin-top: 3em;
+    font-size: 12px;
+    text-decoration: none;
+    color: inherit;
+}
+#modify:hover {
+    text-decoration: underline;
+}

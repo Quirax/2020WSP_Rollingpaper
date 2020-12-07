@@ -29,8 +29,9 @@ public class DAO {
         return instance;
     }
 
-    public User findUser(String name, String pwd) throws SQLException, NamingException {
-        if(pwd == null || pwd.equals("")) return null;
+    public User findUser(String name, String pwd)
+            throws Exception {
+        if(pwd == null || pwd.equals("")) throw new Exception("잘못된 사용자 정보");
 
         Connection conn = connect();
         
@@ -44,9 +45,7 @@ public class DAO {
 
         ResultSet rs = pstmt.executeQuery();
 
-        if(!rs.next()) {
-            return null;
-        }
+        if(!rs.next()) throw new Exception("잘못된 사용자 정보");
 
         User user = new User();
         user.setName(name);
@@ -59,12 +58,10 @@ public class DAO {
         return user;
     }
 
-    public User createUser(String name, String pwd, String nick) throws NamingException, SQLException {
-        User user = new User();
-        user.setName(name);
-        user.setNick(nick);
+    public void createUser(String name, String pwd, String nick)
+            throws Exception {
         
-        if(pwd == null || pwd.equals("")) return null;
+        if(pwd == null || pwd.equals("")) throw new Exception("잘못된 사용자 정보");
 
         Connection conn = connect();
         
@@ -79,19 +76,17 @@ public class DAO {
 
         pstmt.executeUpdate();
 
-        if(pstmt.getUpdateCount() <= 0) {
-            pstmt.close();
-            disconnect(conn);
-            return null;
-        }
+        int updateCount = pstmt.getUpdateCount();
 
         pstmt.close();
         disconnect(conn);
-        return user;
+
+        if(updateCount <= 0) throw new Exception("사용자 정보 변경 실패");
     }
 
-    public User updateUser(User user, String pwd) throws SQLException, NamingException {
-        if(pwd == null || pwd.equals("")) return null;
+    public User updateUser(User user, String pwd)
+            throws Exception {
+        if(pwd == null || pwd.equals("")) throw new Exception("잘못된 사용자 정보");
 
         Connection conn = connect();
         
@@ -106,19 +101,19 @@ public class DAO {
 
         pstmt.executeUpdate();
 
-        if(pstmt.getUpdateCount() <= 0) {
-            pstmt.close();
-            disconnect(conn);
-            return null;
-        }
+        int updateCount = pstmt.getUpdateCount();
 
         pstmt.close();
         disconnect(conn);
+
+        if(updateCount <= 0) throw new Exception("사용자 정보 변경 실패");
+
         return user;
     }
 
-    public boolean deleteUser(User user, String pwd) throws NamingException, SQLException {
-        if(pwd == null || pwd.equals("")) return false;
+    public void deleteUser(User user, String pwd)
+            throws Exception {
+        if(pwd == null || pwd.equals("")) throw new Exception("잘못된 사용자 정보");
 
         Connection conn = connect();
 
@@ -150,20 +145,17 @@ public class DAO {
 
         pstmt.executeUpdate();
 
-        if(pstmt.getUpdateCount() <= 0) {
-            pstmt.close();
-            conn.rollback();
-            disconnect(conn);
-            return false;
-        }
+        int updateCount = pstmt.getUpdateCount();
 
         pstmt.close();
         conn.commit();
         disconnect(conn);
-        return true;
+
+        if(updateCount <= 0) throw new Exception("사용자 정보 변경 실패");
     }
 
-    public ArrayList<Rollingpaper> getRollingpaperLists(User user) throws NamingException, SQLException {
+    public ArrayList<Rollingpaper> getRollingpaperLists(User user)
+            throws NamingException, SQLException {
         ArrayList<Rollingpaper> list = new ArrayList<Rollingpaper>();
 
         Connection conn = connect();
@@ -194,8 +186,8 @@ public class DAO {
         return list;
     }
 
-    public void createRollingpaper(User user, Rollingpaper rp, String pwd) throws NamingException, SQLException {
-        if(pwd == null || pwd.equals("")) return;
+    public void createRollingpaper(User user, Rollingpaper rp, String pwd) throws Exception {
+        if(pwd == null || pwd.equals("")) throw new Exception("잘못된 사용자 정보");
 
         Connection conn = connect();
         
@@ -215,8 +207,8 @@ public class DAO {
         disconnect(conn);
     }
 
-    public Rollingpaper getRollingpaper(User user, int id,String pwd) throws NamingException, SQLException {
-        if (id == 0) return null;
+    public Rollingpaper getRollingpaper(User user, int id,String pwd) throws Exception {
+        if (id == 0) throw new Exception("잘못된 롤링 페이퍼 정보");
         
         Connection conn = connect();
         
@@ -229,11 +221,11 @@ public class DAO {
 
         ResultSet rs = pstmt.executeQuery();
 
-        if(!rs.next()) return null;
+        if(!rs.next()) throw new Exception("롤링 페이퍼를 찾을 수 없음");
 
-        if(user == null || !user.getName().equals(rs.getString("u_name"))) {
-            if(pwd == null || !pwd.equals(rs.getString("r_pwd"))) return null;
-        }
+        if(user == null || !user.getName().equals(rs.getString("u_name")))
+            if(pwd == null || !pwd.equals(rs.getString("r_pwd")))
+                throw new Exception("인가되지 않은 사용자");
 
         Rollingpaper p = new Rollingpaper();
         p.setId(rs.getInt("r_id"));
@@ -249,19 +241,34 @@ public class DAO {
         return refreshRollingpaper(user, p);
     }
 
-    public Rollingpaper refreshRollingpaper(User user, Rollingpaper rp) throws NamingException, SQLException {
+    public Rollingpaper refreshRollingpaper(User user, Rollingpaper rp)
+            throws Exception {
         ArrayList<RollingpaperContent> content = new ArrayList<RollingpaperContent>();
 
         Connection conn = connect();
 
         PreparedStatement pstmt = null;
 
-        String sql = "select * from rollingpaper_content where r_id=?;";
+        String sql = "select r_isClosed from rollingpaper where r_id=?;";
 
         pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1,rp.getId());
 
         ResultSet rs = pstmt.executeQuery();
+
+        if(!rs.next()) throw new Exception("롤링 페이퍼를 찾을 수 없음");
+
+        rp.setIsClosed(rs.getBoolean("r_isClosed"));
+
+        rs.close();
+        pstmt.close();
+
+        sql = "select * from rollingpaper_content where r_id=?;";
+
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1,rp.getId());
+
+        rs = pstmt.executeQuery();
 
         while(rs.next()) {
             RollingpaperContent rc = new RollingpaperContent();
@@ -280,9 +287,9 @@ public class DAO {
         return rp;
     }
 
-    public Rollingpaper changeRollingpaperPassword(User user, Rollingpaper rp, String pwd)
-            throws NamingException, SQLException {
-        if(pwd == null || pwd.equals("")) return null;
+    public void changeRollingpaperPassword(User user, Rollingpaper rp, String pwd)
+            throws Exception {
+        if(pwd == null || pwd.equals("")) throw new Exception("잘못된 사용자 정보");
 
         Connection conn = connect();
 
@@ -297,25 +304,22 @@ public class DAO {
 
         pstmt.executeUpdate();
 
-        System.out.println(sql + " / " + pwd + " / " + rp.getId() + " / " + user.getName());
-
-        if(pstmt.getUpdateCount() <= 0) {
-            pstmt.close();
-            disconnect(conn);
-            return null;
-        }
+        int updateCount = pstmt.getUpdateCount();
 
         pstmt.close();
         disconnect(conn);
-        return rp;
+
+        if(updateCount <= 0) throw new Exception("롤링 페이퍼 정보 변경 실패");
     }
 
-    public boolean closeRollingpaper(User user, Rollingpaper rp) throws NamingException, SQLException {
-        return closeRollingpaper(user, rp.getId());
+    public void closeRollingpaper(User user, Rollingpaper rp)
+            throws Exception {
+        closeRollingpaper(user, rp.getId());
     }
 
-    public boolean closeRollingpaper(User user, int id) throws NamingException, SQLException {
-        if (id == 0) return false;
+    public void closeRollingpaper(User user, int id)
+            throws Exception {
+        if (id == 0) throw new Exception("잘못된 롤링 페이퍼 정보");
         
         Connection conn = connect();
 
@@ -329,19 +333,17 @@ public class DAO {
 
         pstmt.executeUpdate();
 
-        if(pstmt.getUpdateCount() <= 0) {
-            pstmt.close();
-            disconnect(conn);
-            return false;
-        }
+        int updateCount = pstmt.getUpdateCount();
 
         pstmt.close();
         disconnect(conn);
-        return true;
+
+        if(updateCount <= 0) throw new Exception("롤링 페이퍼 정보 변경 실패");
     }
 
-    public boolean deleteRollingpaper(User user, int id) throws NamingException, SQLException {
-        if (id == 0) return false;
+    public void deleteRollingpaper(User user, int id)
+            throws Exception {
+        if (id == 0) throw new Exception("잘못된 롤링 페이퍼 정보");
 
         Connection conn = connect();
 
@@ -366,22 +368,18 @@ public class DAO {
 
         pstmt.executeUpdate();
 
-        if(pstmt.getUpdateCount() <= 0) {
-            conn.rollback();
-            pstmt.close();
-            disconnect(conn);
-            return false;
-        }
+        int updateCount = pstmt.getUpdateCount();
 
         conn.commit();
         pstmt.close();
         disconnect(conn);
-        return true;
+
+        if(updateCount <= 0) throw new Exception("롤링 페이퍼 정보 변경 실패");
     }
 
     public void createRollingpaperContent(Rollingpaper rp, RollingpaperContent rpc, String pwd)
-            throws NamingException, SQLException {
-        if(pwd == null || pwd.equals("")) return;
+            throws Exception {
+        if(pwd == null || pwd.equals("")) throw new Exception("잘못된 사용자 정보");
 
         Connection conn = connect();
         
@@ -394,7 +392,7 @@ public class DAO {
 
         ResultSet rs = pstmt.executeQuery();
         
-        if(!rs.next()) return;
+        if(!rs.next()) throw new Exception("잘못된 롤링 페이퍼 정보");
 
         int id = rs.getInt("rc_id") + 1;
 
@@ -417,7 +415,7 @@ public class DAO {
     }
     
     public Rollingpaper deleteRollingpaperContent(User user, Rollingpaper rp, int id, String pwd)
-            throws NamingException, SQLException {
+            throws Exception {
         Connection conn = connect();
         
         PreparedStatement pstmt = null;
@@ -429,14 +427,14 @@ public class DAO {
 
         ResultSet rs = pstmt.executeQuery();
 
-        if(!rs.next()) return null;
+        if(!rs.next()) throw new Exception("잘못된 롤링 페이퍼 항목 정보");
 
         boolean isOwner = false;
 
         sql = "delete from rollingpaper_content where r_id=? and rc_id=?";
 
         if(user == null || !user.getName().equals(rs.getString("u_name"))) {
-            if(pwd == null || pwd.equals("")) return null;
+            if(pwd == null || pwd.equals("")) throw new Exception("인가되지 않은 사용자");
 
             sql += " and rc_pwd=?;";
             isOwner = false;
@@ -452,14 +450,13 @@ public class DAO {
 
         pstmt.executeUpdate();
 
-        if(pstmt.getUpdateCount() <= 0) {
-            pstmt.close();
-            disconnect(conn);
-            return null;
-        }
+        int updateCount = pstmt.getUpdateCount();
 
         pstmt.close();
         disconnect(conn);
+
+        if(updateCount <= 0) throw new Exception("롤링 페이퍼 정보 변경 실패");
+
         return rp;
     }
 }

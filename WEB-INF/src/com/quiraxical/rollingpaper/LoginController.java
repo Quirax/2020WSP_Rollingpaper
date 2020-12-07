@@ -15,13 +15,11 @@ public class LoginController extends Controller {
             user = dao.findUser(request.getParameter("name"), rsa.decrypt(request.getParameter("pwd"), request));
         } catch (Exception e) {
             e.printStackTrace();
-            user = null;
-        }
-
-        if (user == null) {
             this.error(response, "login.jsp", "아이디 또는 비밀번호가 잘못되었습니다.");
+            rsa.destory(request);
             return;
         }
+        
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
 

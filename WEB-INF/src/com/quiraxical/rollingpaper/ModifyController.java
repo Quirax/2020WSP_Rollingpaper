@@ -27,12 +27,9 @@ public class ModifyController extends Controller {
             user = dao.updateUser(user, rsa.decrypt(request.getParameter("pwd"), request));
         } catch (Exception e) {
             e.printStackTrace();
-            user = null;
-        }
-        
-        if(user == null) {
             this.error(response, "modifyPage.do", "회원 정보를 저장하는 도중 문제가 발생했습니다.\n"
             + "계속해서 문제가 발생할 경우 관리자에게 문의해보세요.");
+            rsa.destory(request);
             return;
         }
 
