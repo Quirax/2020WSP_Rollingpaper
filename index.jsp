@@ -5,7 +5,7 @@
     <qr:css href="css/index.css" />
     <qr:script href="js/index.js" />
 </qr:include>
-<qr:body>
+<qr:body title="롤링 페이퍼">
 <div class="view center slideFx" id="main">
     <h1>롤링 페이퍼</h1>
     <div id="description">

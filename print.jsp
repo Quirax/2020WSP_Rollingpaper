@@ -7,7 +7,7 @@
     <qr:css href="css/print.css" />
 </qr:include>
 <jsp:useBean scope="session" id="rp" type="com.quiraxical.rollingpaper.Rollingpaper" />
-<qr:body>
+<qr:body title="${rp.title} - To. ${rp.to}님">
 <div class="view">
     <h1>
         <span>To. ${rp.to}님</span><br/>

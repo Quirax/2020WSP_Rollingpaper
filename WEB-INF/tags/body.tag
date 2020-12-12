@@ -1,9 +1,10 @@
 <%@ tag language="java" pageEncoding="UTF-8" import="java.util.*" body-content="scriptless" %>
 <%@ tag trimDirectiveWhitespaces="true" %>
+<%@ attribute name="title" %>
 <!doctype html>
 <html>
     <head>
-        <title></title>
+        <title>${title}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="css/common.css" />
 <%

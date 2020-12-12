@@ -44,7 +44,7 @@
         <c:set var="submitText" value="탈퇴하기" />
     </c:when>
 </c:choose>
-<qr:body>
+<qr:body title="${title}">
 <div class="view center slideFx">
     <h2>${title}</h2>
     <input type="hidden" id="rsa_modulus" value="${modulus}" />

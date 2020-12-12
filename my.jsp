@@ -8,7 +8,7 @@
     <qr:script href="js/my.js" />
 </qr:include>
 <jsp:useBean scope="session" id="user" type="com.quiraxical.rollingpaper.User" />
-<qr:body>
+<qr:body title="${user.nick} 님의 마이페이지">
 <div class="view">
     <h1>${user.nick} 님의 마이페이지</h1>
     <h2>내가 연 롤링 페이퍼 목록</h2>

@@ -5,7 +5,7 @@
     <qr:script href="js/create.js" />
 </qr:include>
 <qr:encryptRequired />
-<qr:body>
+<qr:body title="롤링 페이퍼 만들기">
 <div class="view center">
     <input type="hidden" id="rsa_modulus" value="${modulus}" />
     <input type="hidden" id="rsa_exp" value="${exp}" />

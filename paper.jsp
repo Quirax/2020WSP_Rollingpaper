@@ -11,7 +11,7 @@
 <qr:encryptRequired />
 <jsp:useBean scope="session" id="user" type="com.quiraxical.rollingpaper.User" />
 <jsp:useBean scope="session" id="rp" type="com.quiraxical.rollingpaper.Rollingpaper" />
-<qr:body>
+<qr:body title="${rp.title} - To. ${rp.to}님">
 <div class="view">
     <h1>
         <span>To. ${rp.to}님</span><br/>
