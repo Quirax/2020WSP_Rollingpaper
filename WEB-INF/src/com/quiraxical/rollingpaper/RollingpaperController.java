@@ -41,7 +41,6 @@ public class RollingpaperController extends Controller {
         try {
             if (paper == null || (id > 0 && paper.getId() != id)) {
                 if (!toPrint && !isValidUser(user) && request.getParameter("pwd") == null) {
-                    System.out.println("pwd is required");
                     new LoginPageController(3).execute(request, response);
                     return;
                 }

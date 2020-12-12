@@ -27,7 +27,6 @@ public class RSA {
         PublicKey publicKey = (PublicKey) session.getAttribute(RSA.SESSION_PKEY);
         
         if (publicKey == null) {
-            System.out.println("public key is null");
             KeyPairGenerator gen;
             try {
                 gen = KeyPairGenerator.getInstance(RSA.CRYPT_ALGORITHM);
@@ -86,7 +85,6 @@ public class RSA {
     }
 
     public void destory(HttpServletRequest request) {
-        System.out.println("Key is deleted");
         HttpSession session = request.getSession();
         session.removeAttribute(RSA.SESSION_KEY);
         session.removeAttribute(RSA.SESSION_PKEY);
