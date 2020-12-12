@@ -41,7 +41,8 @@ public class RollingpaperController extends Controller {
         try {
             if (paper == null || (id > 0 && paper.getId() != id)) {
                 if (!toPrint && !isValidUser(user) && request.getParameter("pwd") == null) {
-                    new LoginPageController(3).execute(request, response);
+                    if(id == 0) response.sendRedirect("index.jsp");
+                    else new LoginPageController(3).execute(request, response);
                     return;
                 }
 
@@ -59,7 +60,7 @@ public class RollingpaperController extends Controller {
             e.printStackTrace();
             rsa.destory(request);
             rsa.init(request);
-            this.error(response, "rollingpaper.do?id=" + id, "해당하는 롤링 페이퍼를 찾을 수 없습니다.\n"
+            this.error(response, (id == 0)?"index.jsp":("rollingpaper.do?id=" + id), "해당하는 롤링 페이퍼를 찾을 수 없습니다.\n"
                 + "입력한 비밀번호가 잘못되었거나, 이미 마감된 롤링 페이퍼일 수 있습니다.\n"
                 + "생성자에게 문의하시기 바랍니다.");
             return;
